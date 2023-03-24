@@ -1,3 +1,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+body,html{
+    background-color: black;
+    scroll-behavior: smooth;
+}
+
+.frenchFlag:hover{
+    background: linear-gradient(90deg , #0015ff,#ffffff, #ff0101);
+    animation: gradient 15s ease infinite;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.scroll {
+  white-space: nowrap;
+  position: absolute;
+  overflow: hidden;
+}
+.scroll span {
+  display: inline-block;
+  padding-left: 100%;
+  -moz-animation: scroll 15s linear infinite;
+  -webkit-animation: scroll 15s linear infinite;
+  animation: scroll 12s linear infinite;
+}
+.scroll2 span {
+  animation-delay: 6s;
+}
+
+@keyframes scroll {
+  0% {
+     transform: translateX(0);
+  }
+  100% {
+     transform: translateX(-100%);
+  }
+}
