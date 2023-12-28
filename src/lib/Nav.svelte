@@ -39,7 +39,18 @@
         </a>
     </div>
 
-    <!-- linkedin and Github Button -->
-    <!-- TODO -->
+    <!-- Linkedin Button -->
+    <div class="mt-2 mb-2 flex ml-2">
+        <a class="btn ease-in duration-300  bg-transparent" href="https://www.linkedin.com/in/yann-paillard/?locale=en_US" rel="noreferrer noopener">
+            <div class = "divider text-white" id=fadeshow1>Linkedin</div>
+        </a>
+    </div>
+
+    <!-- Github Button -->
+    <div class="mt-2 mb-2 flex ml-2">
+        <a class="btn ease-in duration-300  bg-transparent" href="https://github.com/Payll" rel="noreferrer noopener">
+            <img class="rounded-md h-10 w-10" src="https://avatars.githubusercontent.com/u/74405680?v=4" alt="Yann Paillard">
+        </a>
+    </div>
 
 </div>
