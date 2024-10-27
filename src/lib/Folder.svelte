@@ -18,7 +18,7 @@
 		{#each files as file}
 			<li>
 				{#if file.type === 'folder'}
-					<svelte:self {...file} expanded={expanded} />
+					<svelte:self {...file} {expanded} />
 				{:else}
 					<File {...file} />
 				{/if}
@@ -34,9 +34,9 @@
 		background-size: 1em 1em;
 		font-weight: bold;
 		cursor: pointer;
-		border:none;
-		font-size:14px;
-        color: #ffffff;
+		border: none;
+		font-size: 14px;
+		color: #ffffff;
 	}
 
 	.expanded {
