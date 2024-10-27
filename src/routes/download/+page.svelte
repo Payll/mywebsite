@@ -14,12 +14,13 @@
                     type: 'file', 
                     name: 'CV de Yann Paillard.pdf',
                     downloadPath: '/download/CV_de_Yann_Paillard.pdf'
-                },
-                { 
-                    type: 'file', 
-                    name: 'Resume Yann Paillard.pdf',
-                    downloadPath: '/download/Resume_Yann_Paillard.pdf'
                 }
+                //,
+                //{ 
+                //    type: 'file', 
+                //    name: 'Resume Yann Paillard.pdf',
+                //    downloadPath: '/download/Resume_Yann_Paillard.pdf'
+                //}
             ]
         }
     ];
