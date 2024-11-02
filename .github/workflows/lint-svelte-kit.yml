@@ -1,9 +1,6 @@
 name: SvelteKit Lint
 on:
   pull_request:
-    paths:
-      - './src'
-      - '.github/workflows/lint-svelte-kit.yml'
   push:
     branches:
       - main
