@@ -1,8 +1,9 @@
 <script>
-	import { slide } from 'svelte/transition';
-
+	/** @type {string | null} */
 	let selectedFile = null;
+	/** @type {string | null} */
 	let selectedFileName = null;
+	/** @type {Record<string, boolean>} */
 	let openFolders = {};
 
 	let root = [
@@ -30,11 +31,17 @@
 		openFolders[folder.name] = true;
 	});
 
+	/**
+	 * @param {{ type: string, name: string, downloadPath: string }} file
+	 */
 	function selectFile(file) {
 		selectedFile = file.downloadPath;
 		selectedFileName = file.name;
 	}
 
+	/**
+	 * @param {string} folderName
+	 */
 	function toggleFolder(folderName) {
 		openFolders[folderName] = !openFolders[folderName];
 	}

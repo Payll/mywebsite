@@ -4,12 +4,14 @@
 	import Footer from '../lib/Footer.svelte';
 	import { onMount } from 'svelte';
 
+	/** @type {HTMLElement[]} */
 	let sections = [];
 	let currentActive = '';
 	let sidebarExpanded = false;
 
 	onMount(() => {
 		sections = Array.from(document.querySelectorAll('.my-section'));
+		/** @type {{ [key: string]: number }} */
 		let ratios = {};
 
 		const observer = new IntersectionObserver(
