@@ -48,11 +48,6 @@
 		}
 	}
 
-	// Add this to the element where you want the click event to happen
-	document.querySelectorAll('.your-toggle-container').forEach((container) => {
-		container.addEventListener('click', toggleExpand);
-	});
-
 	// Use Svelte's onMount lifecycle function to add the scroll event listener
 	onMount(() => {
 		window.addEventListener('scroll', reveal);
@@ -60,8 +55,17 @@
 		// Initial check to see if any element is already visible
 		reveal();
 
+		// Add event listeners to the toggle containers
+		const toggleContainers = document.querySelectorAll('.container');
+		toggleContainers.forEach((container) => {
+			container.addEventListener('click', toggleExpand);
+		});
+
 		return () => {
 			window.removeEventListener('scroll', reveal);
+			toggleContainers.forEach((container) => {
+				container.removeEventListener('click', toggleExpand);
+			});
 		};
 	});
 </script>
