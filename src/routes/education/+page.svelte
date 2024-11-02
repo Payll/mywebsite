@@ -1,38 +1,57 @@
 <script>
 	import { onMount } from 'svelte';
 
-	// Function to check visibility of each container
 	function reveal() {
 		const containers = document.querySelectorAll('.container');
 		for (let i = 0; i < containers.length; i++) {
-			const windowHeight = window.innerHeight;
-			const elementTop = containers[i].getBoundingClientRect().top;
-			const elementVisible = 150;
-
-			if (elementTop < windowHeight - elementVisible) {
-				containers[i].style.opacity = 1;
-				containers[i].style.transform = 'translateY(0)';
+			const container = containers[i];
+			if (container instanceof HTMLElement) {
+				const windowHeight = window.innerHeight;
+				const elementTop = container.getBoundingClientRect().top;
+				const elementVisible = 150;
+				if (elementTop < windowHeight - elementVisible) {
+					container.style.opacity = '1';
+					container.style.transform = 'translateY(0)';
+				}
 			}
 		}
 	}
 
-	// Function to toggle the expanded state of a container
+	/**
+	 * @param {Event} event - The click event that triggers the toggle.
+	 */
 	function toggleExpand(event) {
+		// Ensure event.currentTarget is treated as an HTMLElement
 		const container = event.currentTarget;
+		if (!(container instanceof HTMLElement)) {
+			return;
+		}
+
 		const content = container.querySelector('.expanded-content');
 		const indicator = container.querySelector('.expand-indicator');
 		const logos = container.querySelector('.language-logos');
 
-		if (content.style.display === 'block') {
-			content.style.display = 'none';
-			indicator.textContent = '+';
-			logos.style.display = 'none';
-		} else {
-			content.style.display = 'block';
-			indicator.textContent = '-';
-			logos.style.display = 'flex';
+		if (content instanceof HTMLElement && indicator) {
+			if (content.style.display === 'block') {
+				content.style.display = 'none';
+				indicator.textContent = '+';
+				if (logos instanceof HTMLElement) {
+					logos.style.display = 'none';
+				}
+			} else {
+				content.style.display = 'block';
+				indicator.textContent = '-';
+				if (logos instanceof HTMLElement) {
+					logos.style.display = 'flex';
+				}
+			}
 		}
 	}
+
+	// Add this to the element where you want the click event to happen
+	document.querySelectorAll('.your-toggle-container').forEach((container) => {
+		container.addEventListener('click', toggleExpand);
+	});
 
 	// Use Svelte's onMount lifecycle function to add the scroll event listener
 	onMount(() => {
