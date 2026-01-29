@@ -1,0 +1,140 @@
+<script lang="ts">
+	import '../../app.css';
+	import Nav from '../../lib/Nav.svelte';
+	import Footer from '../../lib/Footer.svelte';
+	import { onMount } from 'svelte';
+
+	let sections: HTMLElement[] = [];
+	let currentActive = '';
+
+	onMount(() => {
+		sections = Array.from(document.querySelectorAll<HTMLElement>('.my-section'));
+		const ratios: Record<string, number> = {};
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					ratios[entry.target.id] = entry.intersectionRatio;
+				});
+
+				let maxRatio = 0;
+				let maxSection = '';
+				for (const [section, ratio] of Object.entries(ratios)) {
+					if (ratio > maxRatio) {
+						maxRatio = ratio;
+						maxSection = section;
+					}
+				}
+
+				currentActive = maxSection; // Updating the active section
+			},
+			{
+				rootMargin: '0px 0px -40% 0px', // Adjusted root margin
+				threshold: [0, 0.5, 1]
+			}
+		);
+
+		sections.forEach((section) => observer.observe(section));
+
+		// Fallback for when user scrolls to the bottom
+		const onScroll = () => {
+			const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
+			if (window.scrollY >= scrollTotal && sections.length) {
+				currentActive = sections[sections.length - 1].id; // Set the last section as active
+			}
+		};
+		window.addEventListener('scroll', onScroll);
+
+		return () => {
+			observer.disconnect();
+			window.removeEventListener('scroll', onScroll);
+		};
+	});
+</script>
+
+<div class="flex h-full">
+	<!-- Left Sidebar -->
+	<div
+		class="fixed top-0 left-0 h-screen w-10 border-2 border-gray-500 rounded-l-md shadowRight z-10"
+	>
+		<Nav />
+	</div>
+
+	<!-- Main Content -->
+	<div class="flex-col flex-1 h-full pl-10 pr-10">
+		<slot />
+		<Footer />
+	</div>
+
+	<!-- Right Sidebar with animation -->
+	<div class="fixed top-0 right-0 h-screen w-10 border-2 border-gray-500 rounded-r-md z-10">
+		<div class="flex flex-col items-center justify-center h-1/2">
+			<div class="animated-dot" />
+			<div class="animated-dot" />
+			<div class="animated-dot" />
+			<div class="animated-dot" />
+			<div class="animated-dot" />
+		</div>
+
+		<div class="flex flex-col items-center justify-center h-1/2">
+			{#each sections as section (section.id)}
+				<a href={`#${section.id}`} class="nav-dot" class:active={currentActive === section.id}
+					>&#8226;</a
+				>
+			{/each}
+		</div>
+	</div>
+</div>
+
+<style>
+	/* CSS for the dots */
+	.nav-dot {
+		transition: transform 0.3s;
+		font-size: 1rem; /* Normal size */
+	}
+
+	.nav-dot.active {
+		transform: scale(1.5); /* Larger when active */
+		font-size: 1.5rem; /* or any other transformation you want */
+		margin-bottom: 5px;
+		margin-top: 5px;
+		transition: transform 0.3s;
+		color: #ffffff;
+	}
+
+	/* CSS for the animated dots */
+	.animated-dot {
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background-color: #ffffff;
+		margin: 5px;
+		animation: bounce 1s infinite;
+	}
+
+	.animated-dot:nth-child(2) {
+		animation-delay: 0.1s;
+	}
+
+	.animated-dot:nth-child(3) {
+		animation-delay: 0.2s;
+	}
+
+	.animated-dot:nth-child(4) {
+		animation-delay: 0.3s;
+	}
+
+	.animated-dot:nth-child(5) {
+		animation-delay: 0.4s;
+	}
+
+	@keyframes bounce {
+		0%,
+		100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-10px);
+		}
+	}
+</style>
