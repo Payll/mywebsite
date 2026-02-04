@@ -19,30 +19,30 @@
 		{
 			id: 'nablify',
 			listTitle: 'Nablify',
-			period: 'sept. 2025 - present',
+			period: 'sept. 2025 - présent',
 			logoSrc: '/assets/imgs/home-page-2/experience/nablify.png',
 			logoAlt: 'Nablify',
-			detailTitle: 'Specialiste en ingenierie logicielle · Nablify',
+			detailTitle: 'Spécialiste en ingénierie logicielle · Nablify (Luxembourg)',
 			bullets: [
-				"Backend Python en Agile/Scrum sur plateforme a plusieurs milliers d'utilisateurs mensuels.",
-				'Deploiement et MCO sur Google Cloud (GCP), performance et supervision.',
-				'Recueil des besoins, documentation, restitutions equipe/clients.'
+				'Développement backend Python en Agile/Scrum et déploiement cloud (Google Cloud / GCP) pour une plateforme à plusieurs milliers d’utilisateurs mensuels.',
+				'Maintien en conditions opérationnelles (MCO), optimisation des performances, documentation, veille et formations.',
+				'Traduction des besoins en solutions, restitutions/démos équipe/clients. Anglais langue de travail au quotidien.'
 			],
-			tags: ['Python', 'GCP', 'Docker', 'C/C++', 'Agile/Scrum']
+			tags: ['Python', 'GCP', 'Agile/Scrum', 'MCO']
 		},
 		{
 			id: 'wi6-engineer',
-			listTitle: 'Wi6labs · Ingenieur logiciel',
-			period: 'sept. 2024 - dec. 2024',
+			listTitle: 'Wi6labs · Ingénieur logiciel',
+			period: 'sept. 2024 - juin 2025',
 			logoSrc: '/assets/imgs/home-page-2/experience/Wi6labs.png',
 			logoAlt: 'Wi6labs',
-			detailTitle: 'Ingenieur logiciel & full stack · Wi6labs',
+			detailTitle: 'Ingénieur logiciel et développeur full stack · Wi6labs',
 			bullets: [
-				'Developpement full-stack sur solutions IoT cloud + embarquees (architecture PUB/SUB).',
-				'Cloud: backend PHP/C++, frontend Angular; supervision ELK + Grafana; traitement codecs JS/Python/PHP; templating Twig.',
-				'Embarque: C/C++; integration Modbus, BACnet, MQTT; gestion des sorties et communication materiel.'
+				'Conception/architecture d’un produit embarqué et cloud (Wiotys/uWiotys) utilisé par +100 clients professionnels.',
+				'Développement PHP, C/C++, Python, JavaScript. Mise en place et usage ELK, gestion Agile (Scrum).',
+				'Échanges réguliers avec les clients : recueil des besoins, suivi, restitutions/démos.'
 			],
-			tags: ['C', 'C++', 'PHP', 'Angular', 'Twig', 'MQTT', 'BACnet', 'Modbus', 'ELK', 'Grafana']
+			tags: ['C/C++', 'PHP', 'Python', 'JavaScript', 'ELK', 'Scrum', 'Relation client']
 		},
 		{
 			id: 'wi6-apprentice',
@@ -50,13 +50,13 @@
 			period: 'sept. 2023 - sept. 2024',
 			logoSrc: '/assets/imgs/home-page-2/experience/Wi6labs.png',
 			logoAlt: 'Wi6labs (alternance)',
-			detailTitle: 'Apprentissage developpement logiciel · Wi6labs',
+			detailTitle: 'Alternant en ingénierie du développement logiciel · Wi6labs',
 			bullets: [
-				'Full-stack sur solutions IoT embarquees, avec support de composants cloud (architecture PUB/SUB).',
-				"Embarque: ajout d'une nouvelle fonctionnalite de sortie via integration BACnet; ameliorations backend C++.",
-				'Cloud: backend PHP/C++, frontend Angular; supervision ELK; codecs JS/Python/PHP; templating Twig.'
+				'Développement en équipe de produits de communication IoT (uWiotys/Wiotys) utilisés par +100 clients professionnels en Agile/Scrum.',
+				'Création d’outils internes utilisés en production et participation au maintien/évolution des produits.',
+				'Relation client : échanges de suivi et support.'
 			],
-			tags: ['C++', 'PHP', 'Angular', 'BACnet', 'MQTT', 'Modbus', 'Twig', 'ELK']
+			tags: ['C/C++', 'PHP', 'Agile/Scrum', 'IoT', 'Support']
 		},
 		{
 			id: 'infoscope',
@@ -64,41 +64,41 @@
 			period: 'juin 2023 - sept. 2023',
 			logoSrc: '/assets/imgs/home-page-2/experience/infoscopehellas.png',
 			logoAlt: 'Infoscope Hellas',
-			detailTitle: 'Stage developpement mobile · Infoscope Hellas',
+			detailTitle: "Ingénieur stagiaire en développement d'applications mobiles · Infoscope Hellas",
 			bullets: [
-				'Developpement de "Meterscope Mobile" pour monitorer des equipements IoT.',
-				"Analyse de l'application existante, cadrage des besoins et ameliorations.",
-				'React Native + Expo; deploiement Android et iOS.'
+				'Reconstruction complète d’une application mobile depuis zéro avec React Native / Expo.',
+				'Déploiement d’une nouvelle app, amélioration de l’expérience et des fonctionnalités.',
+				'Stage à l’international (Thessalonique, Grèce).'
 			],
-			tags: ['React Native', 'Expo', 'TypeScript', 'IoT', 'GitLab']
+			tags: ['React Native', 'Expo', 'TypeScript', 'Mobile']
 		},
 		{
 			id: 'keolis',
-			listTitle: 'Keolis Rennes · Stage qualite',
+			listTitle: 'Keolis Rennes · Stage qualité',
 			period: 'juin 2022 - sept. 2022',
 			logoSrc: '/assets/imgs/home-page-2/experience/keolis.png',
 			logoAlt: 'Keolis Rennes',
-			detailTitle: 'Assistant ingenieur qualite · Keolis Rennes',
+			detailTitle: 'Assistant Ingénieur qualité · Keolis Rennes',
 			bullets: [
-				'Digitalisation et automatisation du controle qualite (Parc Relais).',
-				"Formulaires via Kizeo Forms + outil d'analyse Excel pour interpretation des donnees.",
-				"Mise en place d'un flux automatise de la saisie a l'analyse, gain d'efficacite du process."
+				'Digitalisation et automatisation du contrôle qualité (Parc Relais).',
+				'Collecte, analyse et automatisation du reporting via Kizeo Forms + Excel.',
+				'Amélioration de l’efficacité du processus de contrôle.'
 			],
-			tags: ['Kizeo Forms', 'Excel', 'Process', 'Qualite']
+			tags: ['Kizeo Forms', 'Excel', 'Qualité', 'Reporting']
 		},
 		{
 			id: 'wi6-first-internship',
 			listTitle: 'Wi6labs · Stage production',
-			period: 'avr. 2021 - aout 2021',
+			period: 'avr. 2021 - août 2021',
 			logoSrc: '/assets/imgs/home-page-2/experience/Wi6labs.png',
 			logoAlt: 'Wi6labs (stage production)',
-			detailTitle: 'Assistant automatisation production · Wi6labs',
+			detailTitle: 'Assistant en automatisation production · Wi6labs',
 			bullets: [
-				"Mise en place d'un nouveau systeme de production et definition des process.",
-				"Developpement d'un outil de production en Python, approche Agile.",
-				"Collaboration avec un cabinet d'audit externe; outil adopte en production."
+				'Mise en place d’une nouvelle production : scripts Python + processus Agile.',
+				'Coordination avec un cabinet d’audit externe.',
+				'Outil et processus adoptés en production.'
 			],
-			tags: ['Python', 'Agile', 'Git', 'Jenkins']
+			tags: ['Python', 'Agile', 'Production']
 		}
 	];
 
@@ -324,13 +324,6 @@
 								<li class="nav-item">
 									<a class="nav-link" href="#portfolio">Portfolio</a>
 								</li>
-
-								<li class="nav-item">
-									<a class="nav-link" href="#blog">Blog</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" href="#contact">Contact</a>
-								</li>
 							</ul>
 						</div>
 					</div>
@@ -383,11 +376,11 @@
 					</div>
 					<div class="mb-3">
 						<span class="text-400 fs-5">Location</span>
-						<p class="mb-0">Rennes, France (Wi6labs)</p>
+						<p class="mb-0">Fentange, Luxembourg (Nablify)</p>
 					</div>
 					<div class="mb-3">
 						<span class="text-400 fs-5">Focus</span>
-						<p class="mb-0">Software architecture & full-stack engineering</p>
+						<p class="mb-0">Ingénieur logiciel · cloud & embarqué IoT</p>
 					</div>
 				</div>
 
@@ -413,8 +406,8 @@
 			<div class="mobile-header-wrapper-inner">
 				<div class="mobile-header-logo">
 					<a class="d-flex main-logo align-items-center d-inline-flex" href="/">
-						<img src="/assets/imgs/footer-1/logo.svg" alt="zelio" />
-						<span class="fs-4 ms-2 text-dark">william.design</span>
+						<img src="/assets/imgs/footer-1/logo.svg" alt="Yann Paillard" />
+						<span class="fs-4 ms-2 text-dark">Yann Paillard</span>
 					</a>
 					<div class="burger-icon burger-icon-white border rounded-3">
 						<span class="burger-icon-top" />
@@ -446,13 +439,6 @@
 
 									<li class="nav-item">
 										<a class="nav-link" href="/#services">Pricing</a>
-									</li>
-
-									<li class="nav-item">
-										<a class="nav-link" href="/#blog">Blog</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link" href="#contact">Contact</a>
 									</li>
 								</ul>
 							</nav>
@@ -487,7 +473,9 @@
 								<div class="d-flex align-items-center">
 									<span class="text-secondary-2">&lt;span&gt;</span>
 									<div class="text-dark">
-										<div class="typewriter"><h1 class="fs-6 fw-medium">Hey, I’m Yann</h1></div>
+										<div class="typewriter">
+											<h1 class="fs-6 fw-medium">Salut, je suis Yann</h1>
+										</div>
 									</div>
 									<span class="text-secondary-2">&lt;/span&gt;</span>
 								</div>
@@ -496,12 +484,12 @@
 									<span class="text-primary-2">&#123;full-stack&#125;</span>
 									engineer<span class="flicker">_</span>
 								</h1>
-								<p class="mb-6 text-dark">
+								<p class="mb-6 text-dark" style="text-align: justify;">
 									<span class="text-secondary-2">&lt;p&gt;</span>
-									I design software systems and build scalable applications. Currently focused on
-									<span class="text-secondary-2">cloud</span> and
-									<span class="text-secondary-2">embedded IoT</span> at Wi6labs, after completing my
-									engineering degree at ESIR.
+									Ingénieur logiciel avec 2 ans d’expérience (dont alternance) en solutions
+									<span class="text-secondary-2">cloud</span> et
+									<span class="text-secondary-2">embarquées IoT</span>. Je m’intéresse
+									particulièrement à l’architecture logicielle et aux produits fiables, évolutifs.
 									<span class="text-secondary-2">&lt;/p&gt;</span>
 								</p>
 								<div class="row">
@@ -586,63 +574,65 @@
 	<!--Static 2-->
 	<div class="section-static-1 z-0">
 		<div class="container position-relative z-1">
-			<div class="bg-3 py-60 border border-1 rounded-3 position-relative overflow-hidden">
-				<div class="inner">
-					<div class="row align-items-center justify-content-lg-around justify-content-center">
-						<div class="col-lg-auto col-md-6 text-center text-lg-start">
-							<div class="counter-item-cover counter-item">
-								<div class="content mx-auto">
-									<i class="ri-shape-line text-primary-2" />
-									<h2 class="text-300 my-0 fs-50">
-										<span class="fs-50 text-300 mb-0">+</span>
-										<span class="odometer text-dark fw-medium" data-count="2">2</span>
-									</h2>
-									<p class="fs-6 mb-0 text-dark">Years Experience</p>
+			<div class="border border-1 rounded-3 position-relative overflow-hidden">
+				<div class="box-linear-animation bg-3 py-60 position-relative z-1">
+					<div class="inner">
+						<div class="row align-items-center justify-content-lg-around justify-content-center">
+							<div class="col-lg-auto col-md-6 text-center text-lg-start">
+								<div class="counter-item-cover counter-item">
+									<div class="content mx-auto">
+										<i class="ri-shape-line text-primary-2" />
+										<h2 class="text-300 my-0 fs-50">
+											<span class="fs-50 text-300 mb-0">+</span>
+											<span class="odometer text-dark fw-medium" data-count="2">2</span>
+										</h2>
+										<p class="fs-6 mb-0 text-dark">Years Experience</p>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="col-lg-auto col-md-6 text-center text-lg-start">
-							<div class="counter-item-cover counter-item">
-								<div class="content mx-auto">
-									<i class="ri-computer-line text-primary-2" />
-									<h2 class="text-300 my-0 fs-50">
-										<span class="fs-50 text-300 mb-0">+</span>
-										<span class="odometer text-dark fw-medium" data-count="2200">2200</span>
-									</h2>
-									<p class="fs-6 mb-0 text-dark">Satisfied Users (Across Projects)</p>
+							<div class="col-lg-auto col-md-6 text-center text-lg-start">
+								<div class="counter-item-cover counter-item">
+									<div class="content mx-auto">
+										<i class="ri-computer-line text-primary-2" />
+										<h2 class="text-300 my-0 fs-50">
+											<span class="fs-50 text-300 mb-0">+</span>
+											<span class="odometer text-dark fw-medium" data-count="2200">2200</span>
+										</h2>
+										<p class="fs-6 mb-0 text-dark">Utilisateurs mensuels</p>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="col-lg-auto col-md-6 text-center text-lg-start">
-							<div class="counter-item-cover counter-item">
-								<div class="content mx-auto">
-									<i class="ri-service-line text-primary-2" />
-									<h2 class="text-300 my-0 fs-50">
-										<span class="fs-50 text-300 mb-0">+</span>
-										<span class="odometer text-dark fw-medium" data-count="100">100</span>
-									</h2>
-									<p class="fs-6 mb-0 text-dark">Professional Clients</p>
+							<div class="col-lg-auto col-md-6 text-center text-lg-start">
+								<div class="counter-item-cover counter-item">
+									<div class="content mx-auto">
+										<i class="ri-service-line text-primary-2" />
+										<h2 class="text-300 my-0 fs-50">
+											<span class="fs-50 text-300 mb-0">+</span>
+											<span class="odometer text-dark fw-medium" data-count="100">100</span>
+										</h2>
+										<p class="fs-6 mb-0 text-dark">Clients professionnels</p>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="col-lg-auto col-md-6 text-center text-lg-start">
-							<div class="counter-item-cover counter-item">
-								<div class="content mx-auto">
-									<i class="ri-award-line text-primary-2" />
-									<h2 class="text-300 my-0 fs-50">
-										<span class="fs-50 text-300 mb-0">+</span>
-										<span class="odometer text-dark fw-medium" data-count="5">5</span>
-									</h2>
-									<p class="fs-6 mb-0 text-dark">Hackathons / Contests</p>
+							<div class="col-lg-auto col-md-6 text-center text-lg-start">
+								<div class="counter-item-cover counter-item">
+									<div class="content mx-auto">
+										<i class="ri-award-line text-primary-2" />
+										<h2 class="text-300 my-0 fs-50">
+											<span class="fs-50 text-300 mb-0">+</span>
+											<span class="odometer text-dark fw-medium" data-count="5">5</span>
+										</h2>
+										<p class="fs-6 mb-0 text-dark">Hackathons / Contests</p>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+					<div
+						class="background position-absolute top-0 start-0 w-100 h-100 filter-invert"
+						data-background="/assets/imgs/home-page-2/static/bg.png"
+					/>
 				</div>
-				<div
-					class="background position-absolute top-0 start-0 w-100 h-100 filter-invert"
-					data-background="/assets/imgs/home-page-2/static/bg.png"
-				/>
 			</div>
 		</div>
 	</div>
@@ -1121,8 +1111,11 @@
 										<span class="services-chip">Modbus</span>
 										<span class="services-chip">ELK</span>
 										<span class="services-chip">Grafana</span>
+										<span class="services-chip">GitLab CI</span>
+										<span class="services-chip">GitHub Actions</span>
 										<span class="services-chip">Jenkins</span>
-										<span class="services-chip">SonarQube</span>
+										<span class="services-chip">Sonar</span>
+										<span class="services-chip">Maven</span>
 									</div>
 								</div>
 								<div class="col-lg-5">
@@ -1261,9 +1254,11 @@ $ deliverable: maintainable systems</code
 										</svg>
 										<h6 class="my-3 fw-medium">CI/CD & Code Quality</h6>
 										<p class="fs-7 text-300 fw-regular">
-											Automating delivery with <span class="text-secondary-2">Jenkins</span> and
-											enforcing standards with <span class="text-secondary-2">SonarQube</span>,
-											across GitHub/GitLab/Gitea workflows.
+											Automating delivery with <span class="text-secondary-2">GitLab CI</span>,
+											<span class="text-secondary-2">GitHub Actions</span> and
+											<span class="text-secondary-2">Jenkins</span>, plus code quality with
+											<span class="text-secondary-2">Sonar</span> and
+											<span class="text-secondary-2">Maven</span>.
 										</p>
 									</div>
 								</div>
@@ -1413,7 +1408,11 @@ $ deliverable: maintainable systems</code
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-6 pt-3">
-					<div class="rounded-3 border border-1 position-relative h-100 overflow-hidden">
+					<div
+						class="rounded-3 border border-1 position-relative h-100 overflow-hidden"
+						data-aos="fade-up"
+						data-aos-delay="0"
+					>
 						<div class="box-linear-animation p-md-6 p-3">
 							<div class="d-flex align-items-center">
 								<svg
@@ -1433,7 +1432,7 @@ $ deliverable: maintainable systems</code
 							</div>
 							<div class="d-flex flex-column h-100 position-relative mt-5">
 								<ul class="ps-3">
-									<li class="position-relative z-1 mb-3">
+									<li class="position-relative z-1 mb-3" data-aos="fade-up" data-aos-delay="0">
 										<div class="d-flex gap-2">
 											<p class="text-300 text-nowrap fw-regular mb-0">2021-2024:</p>
 											<div>
@@ -1445,7 +1444,7 @@ $ deliverable: maintainable systems</code
 											</div>
 										</div>
 									</li>
-									<li class="position-relative z-1 mb-3">
+									<li class="position-relative z-1 mb-3" data-aos="fade-up" data-aos-delay="120">
 										<div class="d-flex gap-2">
 											<p class="text-300 text-nowrap fw-regular mb-0">2019-2021:</p>
 											<div>
@@ -1456,7 +1455,7 @@ $ deliverable: maintainable systems</code
 											</div>
 										</div>
 									</li>
-									<li class="position-relative z-1 mb-3">
+									<li class="position-relative z-1 mb-3" data-aos="fade-up" data-aos-delay="240">
 										<div class="d-flex gap-2">
 											<p class="text-300 text-nowrap fw-regular mb-0">2017-2019:</p>
 											<div>
@@ -1466,7 +1465,11 @@ $ deliverable: maintainable systems</code
 										</div>
 									</li>
 								</ul>
-								<div class="line-left position-absolute top-0 border-start z-0" />
+								<div
+									class="line-left position-absolute top-0 border-start z-0"
+									data-aos="zoom-in"
+									data-aos-delay="80"
+								/>
 							</div>
 							<div class="bg-overlay position-absolute bottom-0 start-0 z-1" />
 						</div>
@@ -1474,59 +1477,62 @@ $ deliverable: maintainable systems</code
 				</div>
 				<div class="col-lg-6 pt-3">
 					<div
-						class="bg-3 rounded-3 border border-1 p-md-6 p-3 position-relative h-100 overflow-hidden"
+						class="rounded-3 border border-1 position-relative h-100 overflow-hidden"
+						data-aos="fade-up"
+						data-aos-delay="140"
 					>
-						<div class="d-flex align-items-center">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="32"
-								height="32"
-								viewBox="0 0 32 32"
-								fill="none"
-							>
-								<path
-									class="fill-primary-2"
-									d="M20 4H28V10.6667H25.3333V6.66667H20V4ZM12 4V6.66667H6.66667V10.6667H4V4H12ZM20 28V25.3333H25.3333V21.3333H28V28H20ZM12 28H4V21.3333H6.66667V25.3333H12V28ZM4 14.6667H28V17.3333H4V14.6667Z"
-									fill="#A8FF53"
-								/>
-							</svg>
-							<h2 class="mb-0 ms-2">Researched</h2>
+						<div class="box-linear-animation p-md-6 p-3 h-100 position-relative z-1">
+							<div class="d-flex align-items-center">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="32"
+									height="32"
+									viewBox="0 0 32 32"
+									fill="none"
+								>
+									<path
+										class="fill-primary-2"
+										d="M20 4H28V10.6667H25.3333V6.66667H20V4ZM12 4V6.66667H6.66667V10.6667H4V4H12ZM20 28V25.3333H25.3333V21.3333H28V28H20ZM12 28H4V21.3333H6.66667V25.3333H12V28ZM4 14.6667H28V17.3333H4V14.6667Z"
+										fill="#A8FF53"
+									/>
+								</svg>
+								<h2 class="mb-0 ms-2">Informations</h2>
+							</div>
+							<div class="education-info-stack mt-5">
+								<div class="education-info-block" data-aos="fade-up" data-aos-delay="140">
+									<div class="education-info-icon" aria-hidden="true">
+										<i class="ri-translate-2 text-primary-2" />
+									</div>
+									<div class="education-info-content">
+										<div class="education-info-label">Langues</div>
+										<div class="education-info-value">Français · Anglais B2 (TOEIC 865)</div>
+										<div class="education-info-sub text-dark">Anglais langue de travail</div>
+									</div>
+								</div>
+								<div class="education-info-block" data-aos="fade-up" data-aos-delay="260">
+									<div class="education-info-icon" aria-hidden="true">
+										<i class="ri-heart-pulse-line text-primary-2" />
+									</div>
+									<div class="education-info-content">
+										<div class="education-info-label">Centres d’intérêt</div>
+										<div class="education-info-value">
+											Sport (musculation), compétitions d’algorithmes
+										</div>
+										<div class="education-info-sub text-dark">Curiosité et pratique régulière</div>
+									</div>
+								</div>
+								<div class="education-info-block" data-aos="fade-up" data-aos-delay="380">
+									<div class="education-info-icon" aria-hidden="true">
+										<i class="ri-car-line text-primary-2" />
+									</div>
+									<div class="education-info-content">
+										<div class="education-info-label">Mobilité</div>
+										<div class="education-info-value">Permis B + véhicule</div>
+										<div class="education-info-sub text-dark">Disponible pour déplacements</div>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div class="d-flex flex-column h-100 position-relative mt-5">
-							<ul class="ps-3">
-								<li class="position-relative z-1 mb-3">
-									<div class="d-flex gap-2">
-										<p class="text-300 text-nowrap fw-regular mb-0">Langues:</p>
-										<div>
-											<span class="text-primary-2">Français · Anglais B2 (TOEIC 865)</span>
-											<p class="text-dark">Anglais langue de travail</p>
-										</div>
-									</div>
-								</li>
-								<li class="position-relative z-1 mb-3">
-									<div class="d-flex gap-2">
-										<p class="text-300 text-nowrap fw-regular mb-0">Centres d’intérêt:</p>
-										<div>
-											<span class="text-primary-2"
-												>Sport (musculation), compétitions d’algorithmes</span
-											>
-											<p class="text-dark">Curiosité et pratique régulière</p>
-										</div>
-									</div>
-								</li>
-								<li class="position-relative z-1 mb-3">
-									<div class="d-flex gap-2">
-										<p class="text-300 text-nowrap fw-regular mb-0">Mobilité:</p>
-										<div>
-											<span class="text-primary-2">Permis B + véhicule</span>
-											<p class="text-dark">Disponible pour déplacements</p>
-										</div>
-									</div>
-								</li>
-							</ul>
-							<div class="line-left position-absolute top-0 border-start z-0" />
-						</div>
-						<div class="bg-overlay position-absolute bottom-0 start-0 z-1" />
 					</div>
 				</div>
 			</div>
@@ -1773,8 +1779,8 @@ $ deliverable: maintainable systems</code
 	<!-- Skills 1 Page 2 -->
 	<section id="skills" class="section-skills-2 pt-5">
 		<div class="container">
-			<div class="rounded-3 bg-3 border border-1 position-relative overflow-hidden">
-				<div class="position-relative z-1 py-60">
+			<div class="rounded-3 border border-1 position-relative overflow-hidden">
+				<div class="box-linear-animation position-relative z-1 py-60">
 					<div class="position-relative z-1">
 						<div class="text-center">
 							<div class="d-flex align-items-center justify-content-center">
@@ -1912,38 +1918,44 @@ $ deliverable: maintainable systems</code
 												>
 													<li class="mb-3">
 														<div class="d-flex flex-column flex-md-row gap-2">
-															<p class="text-dark text-nowrap mb-0">Front-End:</p>
+															<p class="text-dark text-nowrap mb-0">Développement:</p>
 															<span class="text-300"
-																>HTML, CSS, JavaScript, TypeScript, Angular, React Native (Expo)</span
+																>Python, C/C++, Java (Spring Boot), TypeScript (NestJS)</span
 															>
 														</div>
 													</li>
 													<li class="mb-3">
 														<div class="d-flex flex-column flex-md-row gap-2">
-															<p class="text-dark text-nowrap mb-0">Back-End:</p>
-															<span class="text-300">C++, PHP, Node.js (NestJS), Python, Twig</span>
+															<p class="text-dark text-nowrap mb-0">Front / Mobile:</p>
+															<span class="text-300">Angular, Svelte, React Native (Expo)</span>
 														</div>
 													</li>
 													<li class="mb-3">
 														<div class="d-flex flex-column flex-md-row gap-2">
-															<p class="text-dark text-nowrap mb-0">Embedded & Protocols:</p>
-															<span class="text-300">C/C++, Modbus, BACnet, MQTT, Arduino</span>
+															<p class="text-dark text-nowrap mb-0">Cloud / DevOps:</p>
+															<span class="text-300">Google Cloud (GCP), Docker, Kubernetes</span>
 														</div>
 													</li>
 													<li class="mb-3">
 														<div class="d-flex flex-column flex-md-row gap-2">
-															<p class="text-dark text-nowrap mb-0">DevOps & Quality:</p>
+															<p class="text-dark text-nowrap mb-0">Monitoring / Logs:</p>
+															<span class="text-300">Elasticsearch, Logstash, Kibana, Grafana</span>
+														</div>
+													</li>
+													<li class="mb-3">
+														<div class="d-flex flex-column flex-md-row gap-2">
+															<p class="text-dark text-nowrap mb-0">CI/CD & Qualité:</p>
 															<span class="text-300"
-																>Git (GitHub/GitLab/Gitea), Jenkins, SonarQube, Docker, Kubernetes,
+																>Git (GitHub/GitLab), GitLab CI, GitHub Actions, Jenkins, Sonar,
 																Maven</span
 															>
 														</div>
 													</li>
 													<li class="mb-3">
 														<div class="d-flex flex-column flex-md-row gap-2">
-															<p class="text-dark text-nowrap mb-0">Observability:</p>
+															<p class="text-dark text-nowrap mb-0">Relation client:</p>
 															<span class="text-300"
-																>ELK (Elasticsearch, Logstash, Kibana), Grafana</span
+																>Recueil du besoin, démos/restitutions, support, formation</span
 															>
 														</div>
 													</li>
@@ -2281,8 +2293,6 @@ $ deliverable: maintainable systems</code
 					<a href="#resume" class="fs-6"> Resume </a>
 					<a href="#services" class="fs-6"> Services </a>
 					<a href="#portfolio" class="fs-6"> Portfolio </a>
-					<a href="#blog" class="fs-6"> Blog </a>
-					<a href="#contact" class="fs-6"> Contact </a>
 				</div>
 			</div>
 		</div>

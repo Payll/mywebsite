@@ -14416,6 +14416,69 @@ strong {
 	width: 100%;
 }
 
+/* The education cards look better without the fade-to-solid overlay */
+.section-education .bg-overlay {
+	display: none;
+}
+
+.section-education .education-info-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.section-education .education-info-block {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	padding: 14px;
+	border-radius: 12px;
+	border: 1px solid var(--tc-border-1);
+	background: rgba(255, 255, 255, 0.02);
+}
+
+.section-education .education-info-icon {
+	width: 44px;
+	height: 44px;
+	border-radius: 12px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid var(--tc-border-1);
+	background: var(--tc-bg-3);
+	flex: 0 0 auto;
+}
+
+.section-education .education-info-icon i {
+	font-size: 20px;
+}
+
+.section-education .education-info-content {
+	min-width: 0;
+}
+
+.section-education .education-info-label {
+	font-size: 12px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--tc-neutral-300);
+	margin-bottom: 4px;
+}
+
+.section-education .education-info-value {
+	font-family: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+		'Courier New', monospace;
+	font-size: 16px;
+	color: var(--tc-theme-primary-2);
+	line-height: 1.35;
+}
+
+.section-education .education-info-sub {
+	margin-top: 6px;
+	font-size: 14px;
+	opacity: 0.9;
+}
+
 .line-left {
 	top: 40px;
 	height: 90%;
