@@ -537,6 +537,38 @@ img {
 	animation: flicker 800ms infinite;
 }
 
+.lang-switcher {
+	display: inline-flex;
+	align-items: center;
+	border: 1px solid var(--tc-border-1);
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.04);
+	overflow: hidden;
+}
+
+.lang-switcher button {
+	appearance: none;
+	border: 0;
+	background: transparent;
+	padding: 6px 10px;
+	font-size: 12px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--tc-neutral-300);
+	line-height: 1;
+}
+
+.lang-switcher button.active {
+	background: var(--tc-theme-primary-2);
+	color: #1f1f24;
+	font-weight: 700;
+}
+
+.lang-switcher button:focus-visible {
+	outline: 2px solid var(--tc-theme-primary-2);
+	outline-offset: 2px;
+}
+
 .flickering {
 	animation-name: flickering;
 	animation-duration: 3s;
@@ -14700,6 +14732,10 @@ strong {
 	font-size: 12.5px;
 	line-height: 1.6;
 	color: var(--tc-neutral-0);
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+	word-break: break-word;
+	overflow: hidden;
 }
 
 .section-service-2 .services-terminal__body code {

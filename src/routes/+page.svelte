@@ -1,8 +1,30 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
+	import { locale, setLocale, type Locale } from '$lib/locale';
 
 	// Set this to your future photo URL/path to enable the hero image.
 	const heroPhotoSrc: string | null = null;
+
+	function toggleLocale(next: Locale): void {
+		setLocale(next);
+	}
+
+	const servicesTerminalByLocale: Record<Locale, string> = {
+		fr: `$ scope: cloud + embarque
+$ value: concevoir -> developper -> deployer
+$ architecture: event-driven (pub/sub)
+$ stack: C/C++, PHP, Python, Angular
+$ ops: ELK, Grafana, CI/CD
+$ deliverable: systemes maintenables`,
+		en: `$ scope: cloud + embedded
+$ value: design -> develop -> deploy
+$ architecture: message-driven (pub/sub)
+$ stack: C/C++, PHP, Python, Angular
+$ ops: ELK, Grafana, CI/CD
+$ deliverable: maintainable systems`
+	};
+
+	$: servicesTerminalText = servicesTerminalByLocale[$locale] ?? servicesTerminalByLocale.fr;
 
 	type ExperienceItem = {
 		id: string;
@@ -15,94 +37,190 @@
 		tags: string[];
 	};
 
-	const experiences: ExperienceItem[] = [
-		{
-			id: 'nablify',
-			listTitle: 'Nablify',
-			period: 'sept. 2025 - présent',
-			logoSrc: '/assets/imgs/home-page-2/experience/nablify.png',
-			logoAlt: 'Nablify',
-			detailTitle: 'Spécialiste en ingénierie logicielle · Nablify (Luxembourg)',
-			bullets: [
-				'Développement backend Python en Agile/Scrum et déploiement cloud (Google Cloud / GCP) pour une plateforme à plusieurs milliers d’utilisateurs mensuels.',
-				'Maintien en conditions opérationnelles (MCO), optimisation des performances, documentation, veille et formations.',
-				'Traduction des besoins en solutions, restitutions/démos équipe/clients. Anglais langue de travail au quotidien.'
-			],
-			tags: ['Python', 'GCP', 'Agile/Scrum', 'MCO']
-		},
-		{
-			id: 'wi6-engineer',
-			listTitle: 'Wi6labs · Ingénieur logiciel',
-			period: 'sept. 2024 - juin 2025',
-			logoSrc: '/assets/imgs/home-page-2/experience/Wi6labs.png',
-			logoAlt: 'Wi6labs',
-			detailTitle: 'Ingénieur logiciel et développeur full stack · Wi6labs',
-			bullets: [
-				'Conception/architecture d’un produit embarqué et cloud (Wiotys/uWiotys) utilisé par +100 clients professionnels.',
-				'Développement PHP, C/C++, Python, JavaScript. Mise en place et usage ELK, gestion Agile (Scrum).',
-				'Échanges réguliers avec les clients : recueil des besoins, suivi, restitutions/démos.'
-			],
-			tags: ['C/C++', 'PHP', 'Python', 'JavaScript', 'ELK', 'Scrum', 'Relation client']
-		},
-		{
-			id: 'wi6-apprentice',
-			listTitle: 'Wi6labs · Alternance',
-			period: 'sept. 2023 - sept. 2024',
-			logoSrc: '/assets/imgs/home-page-2/experience/Wi6labs.png',
-			logoAlt: 'Wi6labs (alternance)',
-			detailTitle: 'Alternant en ingénierie du développement logiciel · Wi6labs',
-			bullets: [
-				'Développement en équipe de produits de communication IoT (uWiotys/Wiotys) utilisés par +100 clients professionnels en Agile/Scrum.',
-				'Création d’outils internes utilisés en production et participation au maintien/évolution des produits.',
-				'Relation client : échanges de suivi et support.'
-			],
-			tags: ['C/C++', 'PHP', 'Agile/Scrum', 'IoT', 'Support']
-		},
-		{
-			id: 'infoscope',
-			listTitle: 'Infoscope Hellas',
-			period: 'juin 2023 - sept. 2023',
-			logoSrc: '/assets/imgs/home-page-2/experience/infoscopehellas.png',
-			logoAlt: 'Infoscope Hellas',
-			detailTitle: "Ingénieur stagiaire en développement d'applications mobiles · Infoscope Hellas",
-			bullets: [
-				'Reconstruction complète d’une application mobile depuis zéro avec React Native / Expo.',
-				'Déploiement d’une nouvelle app, amélioration de l’expérience et des fonctionnalités.',
-				'Stage à l’international (Thessalonique, Grèce).'
-			],
-			tags: ['React Native', 'Expo', 'TypeScript', 'Mobile']
-		},
-		{
-			id: 'keolis',
-			listTitle: 'Keolis Rennes · Stage qualité',
-			period: 'juin 2022 - sept. 2022',
-			logoSrc: '/assets/imgs/home-page-2/experience/keolis.png',
-			logoAlt: 'Keolis Rennes',
-			detailTitle: 'Assistant Ingénieur qualité · Keolis Rennes',
-			bullets: [
-				'Digitalisation et automatisation du contrôle qualité (Parc Relais).',
-				'Collecte, analyse et automatisation du reporting via Kizeo Forms + Excel.',
-				'Amélioration de l’efficacité du processus de contrôle.'
-			],
-			tags: ['Kizeo Forms', 'Excel', 'Qualité', 'Reporting']
-		},
-		{
-			id: 'wi6-first-internship',
-			listTitle: 'Wi6labs · Stage production',
-			period: 'avr. 2021 - août 2021',
-			logoSrc: '/assets/imgs/home-page-2/experience/Wi6labs.png',
-			logoAlt: 'Wi6labs (stage production)',
-			detailTitle: 'Assistant en automatisation production · Wi6labs',
-			bullets: [
-				'Mise en place d’une nouvelle production : scripts Python + processus Agile.',
-				'Coordination avec un cabinet d’audit externe.',
-				'Outil et processus adoptés en production.'
-			],
-			tags: ['Python', 'Agile', 'Production']
-		}
-	];
+	const experiencesByLocale: Record<Locale, ExperienceItem[]> = {
+		fr: [
+			{
+				id: 'nablify',
+				listTitle: 'Nablify',
+				period: 'sept. 2025 - présent',
+				logoSrc: '/assets/imgs/home-page-2/experience/nablify.png',
+				logoAlt: 'Nablify',
+				detailTitle: 'Spécialiste en ingénierie logicielle · Nablify (Luxembourg)',
+				bullets: [
+					'Développement backend Python en Agile/Scrum et déploiement cloud (Google Cloud / GCP) pour une plateforme à plusieurs milliers d’utilisateurs mensuels.',
+					'Maintien en conditions opérationnelles (MCO), optimisation des performances, documentation, veille et formations.',
+					'Traduction des besoins en solutions, restitutions/démos équipe/clients. Anglais langue de travail au quotidien.'
+				],
+				tags: ['Python', 'GCP', 'Agile/Scrum', 'MCO']
+			},
+			{
+				id: 'wi6-engineer',
+				listTitle: 'Wi6labs · Ingénieur logiciel',
+				period: 'sept. 2024 - juin 2025',
+				logoSrc: '/assets/imgs/home-page-2/experience/Wi6labs.png',
+				logoAlt: 'Wi6labs',
+				detailTitle: 'Ingénieur logiciel et développeur full stack · Wi6labs',
+				bullets: [
+					'Conception/architecture d’un produit embarqué et cloud (Wiotys/uWiotys) utilisé par +100 clients professionnels.',
+					'Développement PHP, C/C++, Python, JavaScript. Mise en place et usage ELK, gestion Agile (Scrum).',
+					'Échanges réguliers avec les clients : recueil des besoins, suivi, restitutions/démos.'
+				],
+				tags: ['C/C++', 'PHP', 'Python', 'JavaScript', 'ELK', 'Scrum', 'Relation client']
+			},
+			{
+				id: 'wi6-apprentice',
+				listTitle: 'Wi6labs · Alternance',
+				period: 'sept. 2023 - sept. 2024',
+				logoSrc: '/assets/imgs/home-page-2/experience/Wi6labs.png',
+				logoAlt: 'Wi6labs (alternance)',
+				detailTitle: 'Alternant en ingénierie du développement logiciel · Wi6labs',
+				bullets: [
+					'Développement en équipe de produits de communication IoT (uWiotys/Wiotys) utilisés par +100 clients professionnels en Agile/Scrum.',
+					'Création d’outils internes utilisés en production et participation au maintien/évolution des produits.',
+					'Relation client : échanges de suivi et support.'
+				],
+				tags: ['C/C++', 'PHP', 'Agile/Scrum', 'IoT', 'Support']
+			},
+			{
+				id: 'infoscope',
+				listTitle: 'Infoscope Hellas',
+				period: 'juin 2023 - sept. 2023',
+				logoSrc: '/assets/imgs/home-page-2/experience/infoscopehellas.png',
+				logoAlt: 'Infoscope Hellas',
+				detailTitle:
+					"Ingénieur stagiaire en développement d'applications mobiles · Infoscope Hellas",
+				bullets: [
+					'Reconstruction complète d’une application mobile depuis zéro avec React Native / Expo.',
+					'Déploiement d’une nouvelle app, amélioration de l’expérience et des fonctionnalités.',
+					'Stage à l’international (Thessalonique, Grèce).'
+				],
+				tags: ['React Native', 'Expo', 'TypeScript', 'Mobile']
+			},
+			{
+				id: 'keolis',
+				listTitle: 'Keolis Rennes · Stage qualité',
+				period: 'juin 2022 - sept. 2022',
+				logoSrc: '/assets/imgs/home-page-2/experience/keolis.png',
+				logoAlt: 'Keolis Rennes',
+				detailTitle: 'Assistant Ingénieur qualité · Keolis Rennes',
+				bullets: [
+					'Digitalisation et automatisation du contrôle qualité (Parc Relais).',
+					'Collecte, analyse et automatisation du reporting via Kizeo Forms + Excel.',
+					'Amélioration de l’efficacité du processus de contrôle.'
+				],
+				tags: ['Kizeo Forms', 'Excel', 'Qualité', 'Reporting']
+			},
+			{
+				id: 'wi6-first-internship',
+				listTitle: 'Wi6labs · Stage production',
+				period: 'avr. 2021 - août 2021',
+				logoSrc: '/assets/imgs/home-page-2/experience/Wi6labs.png',
+				logoAlt: 'Wi6labs (stage production)',
+				detailTitle: 'Assistant en automatisation production · Wi6labs',
+				bullets: [
+					'Mise en place d’une nouvelle production : scripts Python + processus Agile.',
+					'Coordination avec un cabinet d’audit externe.',
+					'Outil et processus adoptés en production.'
+				],
+				tags: ['Python', 'Agile', 'Production']
+			}
+		],
+		en: [
+			{
+				id: 'nablify',
+				listTitle: 'Nablify',
+				period: 'Sep 2025 - present',
+				logoSrc: '/assets/imgs/home-page-2/experience/nablify.png',
+				logoAlt: 'Nablify',
+				detailTitle: 'Software Engineering Specialist · Nablify (Luxembourg)',
+				bullets: [
+					'Python backend development in Agile/Scrum and cloud deployments (Google Cloud / GCP) for a platform with several thousand monthly users.',
+					'Operations (MCO), performance optimization, documentation, tech watch, and internal training.',
+					'Translating requirements into solutions; team/customer demos and follow-ups. English is my day-to-day working language.'
+				],
+				tags: ['Python', 'GCP', 'Agile/Scrum', 'MCO']
+			},
+			{
+				id: 'wi6-engineer',
+				listTitle: 'Wi6labs · Software engineer',
+				period: 'Sep 2024 - Jun 2025',
+				logoSrc: '/assets/imgs/home-page-2/experience/Wi6labs.png',
+				logoAlt: 'Wi6labs',
+				detailTitle: 'Software engineer and full stack developer · Wi6labs',
+				bullets: [
+					'Designed and architected an embedded + cloud product (Wiotys/uWiotys) used by 100+ professional customers.',
+					'Development with PHP, C/C++, Python, and JavaScript. Set up and used ELK; Agile/Scrum (Scrum).',
+					'Regular customer interactions: requirement gathering, follow-ups, demos.'
+				],
+				tags: ['C/C++', 'PHP', 'Python', 'JavaScript', 'ELK', 'Scrum', 'Customer-facing']
+			},
+			{
+				id: 'wi6-apprentice',
+				listTitle: 'Wi6labs · Apprenticeship',
+				period: 'Sep 2023 - Sep 2024',
+				logoSrc: '/assets/imgs/home-page-2/experience/Wi6labs.png',
+				logoAlt: 'Wi6labs (apprenticeship)',
+				detailTitle: 'Software development engineering apprentice · Wi6labs',
+				bullets: [
+					'Team development of IoT communication products (uWiotys/Wiotys) used by 100+ professional customers, in Agile/Scrum.',
+					'Built internal tools used in production; contributed to maintenance and evolution of products.',
+					'Customer-facing support and follow-ups.'
+				],
+				tags: ['C/C++', 'PHP', 'Agile/Scrum', 'IoT', 'Support']
+			},
+			{
+				id: 'infoscope',
+				listTitle: 'Infoscope Hellas',
+				period: 'Jun 2023 - Sep 2023',
+				logoSrc: '/assets/imgs/home-page-2/experience/infoscopehellas.png',
+				logoAlt: 'Infoscope Hellas',
+				detailTitle: 'Mobile app development intern · Infoscope Hellas',
+				bullets: [
+					'Rebuilt a mobile application from scratch with React Native / Expo.',
+					'Deployed a new app, improving experience and features.',
+					'International internship (Thessaloniki, Greece).'
+				],
+				tags: ['React Native', 'Expo', 'TypeScript', 'Mobile']
+			},
+			{
+				id: 'keolis',
+				listTitle: 'Keolis Rennes · Quality internship',
+				period: 'Jun 2022 - Sep 2022',
+				logoSrc: '/assets/imgs/home-page-2/experience/keolis.png',
+				logoAlt: 'Keolis Rennes',
+				detailTitle: 'Quality engineering assistant · Keolis Rennes',
+				bullets: [
+					'Digitalized and automated quality control (Park & Ride facilities).',
+					'Data collection, analysis, and automated reporting with Kizeo Forms + Excel.',
+					'Improved efficiency of the control process.'
+				],
+				tags: ['Kizeo Forms', 'Excel', 'Quality', 'Reporting']
+			},
+			{
+				id: 'wi6-first-internship',
+				listTitle: 'Wi6labs · Production internship',
+				period: 'Apr 2021 - Aug 2021',
+				logoSrc: '/assets/imgs/home-page-2/experience/Wi6labs.png',
+				logoAlt: 'Wi6labs (production internship)',
+				detailTitle: 'Production automation assistant · Wi6labs',
+				bullets: [
+					'Bootstrapped a new production line: Python scripts and Agile processes.',
+					'Coordinated with an external audit firm.',
+					'Tools and processes adopted in production.'
+				],
+				tags: ['Python', 'Agile', 'Production']
+			}
+		]
+	};
+
+	let experiences: ExperienceItem[] = experiencesByLocale.fr;
+	$: experiences = experiencesByLocale[$locale] ?? experiencesByLocale.fr;
 
 	let selectedExperienceId: ExperienceItem['id'] = experiences[0]?.id ?? 'nablify';
+	$: if (experiences.length > 0 && !experiences.some((e) => e.id === selectedExperienceId)) {
+		selectedExperienceId = experiences[0].id;
+	}
+
 	let selectedExperience: ExperienceItem | null = null;
 	$: selectedExperience =
 		experiences.find((e) => e.id === selectedExperienceId) ?? experiences[0] ?? null;
@@ -119,7 +237,7 @@
 	let isTyping = false;
 	let cursorTarget: CursorTarget = null;
 	let isMounted = false;
-	let lastSelectedExperienceId: ExperienceItem['id'] | null = null;
+	let lastTypingKey: string | null = null;
 	let typingTimeout: ReturnType<typeof setTimeout> | null = null;
 	let prefersReducedMotion = false;
 
@@ -206,8 +324,7 @@
 	onMount(() => {
 		isMounted = true;
 		prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-		lastSelectedExperienceId = selectedExperienceId;
-		if (selectedExperience) startTypingExperience(selectedExperience);
+		lastTypingKey = null;
 
 		document.body.classList.add('home-page-2');
 
@@ -222,8 +339,9 @@
 	});
 
 	$: if (isMounted && selectedExperience) {
-		if (lastSelectedExperienceId !== selectedExperienceId) {
-			lastSelectedExperienceId = selectedExperienceId;
+		const typingKey = `${$locale}:${selectedExperienceId}`;
+		if (lastTypingKey !== typingKey) {
+			lastTypingKey = typingKey;
 			startTypingExperience(selectedExperience);
 		}
 	}
@@ -311,18 +429,24 @@
 						<div class="collapse navbar-collapse" id="navbarSupportedContent">
 							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 								<li class="nav-item">
-									<a class="nav-link active" href="#about">About me</a>
+									<a class="nav-link active" href="#about"
+										>{$locale === 'fr' ? 'A propos' : 'About me'}</a
+									>
 								</li>
 
 								<li class="nav-item">
-									<a class="nav-link" href="#resume">Resume</a>
+									<a class="nav-link" href="#resume">{$locale === 'fr' ? 'Parcours' : 'Resume'}</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" href="#services">Services</a>
+									<a class="nav-link" href="#services"
+										>{$locale === 'fr' ? 'Services' : 'Services'}</a
+									>
 								</li>
 
 								<li class="nav-item">
-									<a class="nav-link" href="#portfolio">Portfolio</a>
+									<a class="nav-link" href="#portfolio"
+										>{$locale === 'fr' ? 'Experience' : 'Experience'}</a
+									>
 								</li>
 							</ul>
 						</div>
@@ -348,10 +472,30 @@
 					</div>
 				</div>
 				<div
-					class="dark-light-switcher pe-10 pe-lg-0 pe-0 ps-md-5 ps-0 ps-lg-4 pe-lg-4 d-flex justify-content-center align-items-center icon_80"
+					class="pe-10 pe-lg-0 pe-0 ps-md-5 ps-0 ps-lg-4 pe-lg-4 d-flex align-items-center gap-3"
 				>
-					<i class="ri-sun-fill text-warning" />
-					<i class="ri-contrast-2-line text-white" />
+					<div class="lang-switcher">
+						<button
+							type="button"
+							class:active={$locale === 'fr'}
+							aria-pressed={$locale === 'fr'}
+							on:click|stopPropagation={() => toggleLocale('fr')}
+						>
+							FR
+						</button>
+						<button
+							type="button"
+							class:active={$locale === 'en'}
+							aria-pressed={$locale === 'en'}
+							on:click|stopPropagation={() => toggleLocale('en')}
+						>
+							EN
+						</button>
+					</div>
+					<div class="dark-light-switcher d-flex justify-content-center align-items-center icon_80">
+						<i class="ri-sun-fill text-warning" />
+						<i class="ri-contrast-2-line text-white" />
+					</div>
 				</div>
 			</nav>
 		</div>
@@ -360,11 +504,15 @@
 			<div class="offCanvas__close-icon menu-close">
 				<button><i class="ri-close-line" /></button>
 			</div>
-			<div class="offCanvas__logo mb-5"><h3 class="mb-0">Get in touch</h3></div>
+			<div class="offCanvas__logo mb-5">
+				<h3 class="mb-0">{$locale === 'fr' ? 'Contact' : 'Get in touch'}</h3>
+			</div>
 			<div class="offCanvas__side-info mb-30">
 				<div class="contact-list mb-30">
 					<p class="fs-6 fw-medium text-200 mb-5">
-						I'm always excited to take on new projects and collaborate with innovative minds.
+						{$locale === 'fr'
+							? 'Toujours partant pour de nouveaux projets et des collaborations ambitieuses.'
+							: "I'm always excited to take on new projects and collaborate with innovative minds."}
 					</p>
 					<div class="mb-3">
 						<span class="text-400 fs-5">LinkedIn</span>
@@ -431,14 +579,18 @@
 									</li>
 
 									<li class="nav-item">
-										<a class="nav-link" href="/#services">Services</a>
+										<a class="nav-link" href="/#services"
+											>{$locale === 'fr' ? 'Services' : 'Services'}</a
+										>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" href="/#portfolio">Portfolio</a>
+										<a class="nav-link" href="/#portfolio"
+											>{$locale === 'fr' ? 'Experience' : 'Experience'}</a
+										>
 									</li>
 
 									<li class="nav-item">
-										<a class="nav-link" href="/#services">Pricing</a>
+										<a class="nav-link" href="/#services">{$locale === 'fr' ? 'Offre' : 'Offer'}</a>
 									</li>
 								</ul>
 							</nav>
@@ -474,7 +626,9 @@
 									<span class="text-secondary-2">&lt;span&gt;</span>
 									<div class="text-dark">
 										<div class="typewriter">
-											<h1 class="fs-6 fw-medium">Salut, je suis Yann</h1>
+											<h1 class="fs-6 fw-medium">
+												{$locale === 'fr' ? 'Salut, je suis Yann' : "Hey, I'm Yann"}
+											</h1>
 										</div>
 									</div>
 									<span class="text-secondary-2">&lt;/span&gt;</span>
@@ -486,10 +640,17 @@
 								</h1>
 								<p class="mb-6 text-dark" style="text-align: justify;">
 									<span class="text-secondary-2">&lt;p&gt;</span>
-									Ingénieur logiciel avec 2 ans d’expérience (dont alternance) en solutions
-									<span class="text-secondary-2">cloud</span> et
-									<span class="text-secondary-2">embarquées IoT</span>. Je m’intéresse
-									particulièrement à l’architecture logicielle et aux produits fiables, évolutifs.
+									{#if $locale === 'fr'}
+										Ingénieur logiciel avec 2 ans d’expérience (dont alternance) en solutions
+										<span class="text-secondary-2">cloud</span> et
+										<span class="text-secondary-2">embarquées IoT</span>. Je m’intéresse
+										particulièrement à l’architecture logicielle et aux produits fiables, évolutifs.
+									{:else}
+										Software engineer with 2 years of experience (including an apprenticeship)
+										building <span class="text-secondary-2">cloud</span> and
+										<span class="text-secondary-2">embedded IoT</span> solutions. I’m especially interested
+										in software architecture and in delivering reliable, scalable products.
+									{/if}
 									<span class="text-secondary-2">&lt;/p&gt;</span>
 								</p>
 								<div class="row">
@@ -551,11 +712,7 @@
 										<span class="fs-6 text-300 mb-2">...and more</span>
 									</div>
 								</div>
-								<a
-									href="/download/Resume%20Yann%20Paillard.pdf"
-									class="btn me-2 text-300 ps-0 mt-4"
-									target="_blank"
-								>
+								<a href="/download/CV_FR.pdf" class="btn me-2 text-300 ps-0 mt-4" target="_blank">
 									<i class="ri-download-line text-primary-2" />
 									[ Download my CV ]
 								</a>
@@ -586,7 +743,9 @@
 											<span class="fs-50 text-300 mb-0">+</span>
 											<span class="odometer text-dark fw-medium" data-count="2">2</span>
 										</h2>
-										<p class="fs-6 mb-0 text-dark">Years Experience</p>
+										<p class="fs-6 mb-0 text-dark">
+											{$locale === 'fr' ? "Années d'expérience" : 'Years experience'}
+										</p>
 									</div>
 								</div>
 							</div>
@@ -598,7 +757,9 @@
 											<span class="fs-50 text-300 mb-0">+</span>
 											<span class="odometer text-dark fw-medium" data-count="2200">2200</span>
 										</h2>
-										<p class="fs-6 mb-0 text-dark">Utilisateurs mensuels</p>
+										<p class="fs-6 mb-0 text-dark">
+											{$locale === 'fr' ? 'Utilisateurs mensuels' : 'Monthly active users'}
+										</p>
 									</div>
 								</div>
 							</div>
@@ -610,7 +771,9 @@
 											<span class="fs-50 text-300 mb-0">+</span>
 											<span class="odometer text-dark fw-medium" data-count="100">100</span>
 										</h2>
-										<p class="fs-6 mb-0 text-dark">Clients professionnels</p>
+										<p class="fs-6 mb-0 text-dark">
+											{$locale === 'fr' ? 'Clients professionnels' : 'Professional clients'}
+										</p>
 									</div>
 								</div>
 							</div>
@@ -622,7 +785,9 @@
 											<span class="fs-50 text-300 mb-0">+</span>
 											<span class="odometer text-dark fw-medium" data-count="5">5</span>
 										</h2>
-										<p class="fs-6 mb-0 text-dark">Hackathons / Contests</p>
+										<p class="fs-6 mb-0 text-dark">
+											{$locale === 'fr' ? 'Hackathons / Concours' : 'Hackathons / Contests'}
+										</p>
 									</div>
 								</div>
 							</div>
@@ -1091,31 +1256,52 @@
 											<circle cx="2.5" cy="3" r="2.5" fill="#A8FF53" />
 										</svg>
 										<span class="text-linear-4 d-flex align-items-center"
-											>From brief to production</span
+											>{$locale === 'fr' ? 'Du brief a la prod' : 'From brief to production'}</span
 										>
 									</div>
 									<h3 class="mt-2 text-center text-lg-start">
-										Designing solutions
+										{$locale === 'fr' ? 'Concevoir des solutions' : 'Designing solutions'}
 										<span class="text-300">
-											custom-built<br />
-											for cloud + embedded systems
+											{#if $locale === 'fr'}
+												sur-mesure<br />
+												pour le cloud + l'embarque
+											{:else}
+												custom-built<br />
+												for cloud + embedded
+											{/if}
 										</span>
 									</h3>
 									<p class="text-300 mt-3 mb-0 text-center text-lg-start">
-										IoT architectures, real-world protocols, observability, and shipping discipline.
+										{$locale === 'fr'
+											? 'Du design au run: architecture cloud, integration embarquee, observabilite, et discipline de livraison.'
+											: 'From design to run: cloud architecture, embedded integration, observability, and shipping discipline.'}
 									</p>
+									<div class="services-nablify mt-3 text-center text-lg-start">
+										{#if $locale === 'fr'}
+											<p class="text-dark mb-2">
+												Mon experience couvre le cycle complet
+												<span class="text-secondary-2"
+													>conception -> developpement -> deploiement</span
+												>, avec un focus sur des systemes maintenables.
+											</p>
+										{:else}
+											<p class="text-dark mb-2">
+												My experience spans the full
+												<span class="text-secondary-2">design -> develop -> deploy</span> loop, with
+												a focus on maintainable systems.
+											</p>
+										{/if}
+									</div>
 									<div class="services-chips mt-4 justify-content-center justify-content-lg-start">
+										<span class="services-chip">Design</span>
+										<span class="services-chip">Develop</span>
+										<span class="services-chip">Deploy</span>
 										<span class="services-chip">PUB/SUB</span>
-										<span class="services-chip">MQTT</span>
-										<span class="services-chip">BACnet</span>
-										<span class="services-chip">Modbus</span>
+										<span class="services-chip">GCP</span>
+										<span class="services-chip">Python</span>
+										<span class="services-chip">CI/CD</span>
 										<span class="services-chip">ELK</span>
 										<span class="services-chip">Grafana</span>
-										<span class="services-chip">GitLab CI</span>
-										<span class="services-chip">GitHub Actions</span>
-										<span class="services-chip">Jenkins</span>
-										<span class="services-chip">Sonar</span>
-										<span class="services-chip">Maven</span>
 									</div>
 								</div>
 								<div class="col-lg-5">
@@ -1128,13 +1314,7 @@
 											</div>
 											<span class="services-terminal__title">yann@portfolio:~</span>
 										</div>
-										<pre class="services-terminal__body"><code
-												>$ scope: cloud + embedded IoT
-$ architecture: message-driven (pub/sub)
-$ stack: C/C++, PHP, Python, Angular
-$ ops: ELK, Grafana, CI/CD
-$ deliverable: maintainable systems</code
-											></pre>
+										<pre class="services-terminal__body"><code>{servicesTerminalText}</code></pre>
 									</div>
 								</div>
 							</div>
@@ -1155,15 +1335,26 @@ $ deliverable: maintainable systems</code
 												fill="#1F1F24"
 											/>
 										</svg>
-										<h6 class="my-3 fw-medium">Cloud IoT Backends</h6>
+										<h6 class="my-3 fw-medium">
+											{$locale === 'fr' ? 'Backends Cloud' : 'Cloud Backends'}
+										</h6>
 										<p class="fs-7 text-300 fw-regular">
-											Building reliable services around a <span class="text-secondary-2"
-												>PUB/SUB</span
-											>
-											architecture, with codec processing and JSON templating. Comfortable across
-											<span class="text-secondary-2">C++</span>,
-											<span class="text-secondary-2">PHP</span>, and
-											<span class="text-secondary-2">Python</span>.
+											{#if $locale === 'fr'}
+												Backends cloud fiables autour d'une architecture <span
+													class="text-secondary-2">event-driven (PUB/SUB)</span
+												>, APIs et pipelines de traitement. A l'aise en
+												<span class="text-secondary-2">C++</span>,
+												<span class="text-secondary-2">PHP</span>
+												et
+												<span class="text-secondary-2">Python</span> - du design au run.
+											{:else}
+												Reliable cloud backends built around <span class="text-secondary-2"
+													>event-driven PUB/SUB</span
+												>, APIs and processing pipelines. Comfortable across
+												<span class="text-secondary-2">C++</span>,
+												<span class="text-secondary-2">PHP</span>, and
+												<span class="text-secondary-2">Python</span> - from design to run.
+											{/if}
 										</p>
 									</div>
 								</div>
@@ -1181,14 +1372,23 @@ $ deliverable: maintainable systems</code
 												fill="#1F1F24"
 											/>
 										</svg>
-										<h6 class="my-3 fw-medium">Embedded & Protocols</h6>
+										<h6 class="my-3 fw-medium">
+											{$locale === 'fr' ? 'Embarque & Protocoles' : 'Embedded & Protocols'}
+										</h6>
 										<p class="fs-7 text-300 fw-regular">
-											Integrating real-world field protocols like <span class="text-secondary-2"
-												>MQTT</span
-											>,
-											<span class="text-secondary-2">BACnet</span>, and
-											<span class="text-secondary-2">Modbus</span>
-											to control outputs and exchange data with hardware.
+											{#if $locale === 'fr'}
+												Integration embarquee et adaptateurs de protocoles (<span
+													class="text-secondary-2">MQTT</span
+												>, <span class="text-secondary-2">BACnet</span>,
+												<span class="text-secondary-2">Modbus</span>) : passerelles pour interfacer
+												le materiel, fiabiliser les echanges et remonter la donnee vers le cloud.
+											{:else}
+												Embedded integration and protocol adapters (<span class="text-secondary-2"
+													>MQTT</span
+												>, <span class="text-secondary-2">BACnet</span>, and
+												<span class="text-secondary-2">Modbus</span>) - gateways to interface with
+												hardware, make data reliable, and bridge it to the cloud.
+											{/if}
 										</p>
 									</div>
 								</div>
@@ -1206,12 +1406,20 @@ $ deliverable: maintainable systems</code
 												fill="#1F1F24"
 											/>
 										</svg>
-										<h6 class="my-3 fw-medium">Observability</h6>
+										<h6 class="my-3 fw-medium">
+											{$locale === 'fr' ? 'Observabilite' : 'Observability'}
+										</h6>
 										<p class="fs-7 text-300 fw-regular">
-											Keeping production visible with dashboards and logs using
-											<span class="text-secondary-2">ELK</span> and
-											<span class="text-secondary-2">Grafana</span>
-											so issues are found before users feel them.
+											{#if $locale === 'fr'}
+												Dashboards, logs et alerting : <span class="text-secondary-2">ELK</span> et
+												<span class="text-secondary-2">Grafana</span> pour reduire le temps de debug
+												et detecter les problemes avant les utilisateurs.
+											{:else}
+												Dashboards, logs and alerting with <span class="text-secondary-2">ELK</span>
+												and
+												<span class="text-secondary-2">Grafana</span> to shorten time-to-debug and catch
+												issues before users feel them.
+											{/if}
 										</p>
 									</div>
 								</div>
@@ -1229,12 +1437,22 @@ $ deliverable: maintainable systems</code
 												fill="#1F1F24"
 											/>
 										</svg>
-										<h6 class="my-3 fw-medium">Frontend Dashboards</h6>
+										<h6 class="my-3 fw-medium">
+											{$locale === 'fr' ? 'Dashboards Frontend' : 'Frontend Dashboards'}
+										</h6>
 										<p class="fs-7 text-300 fw-regular">
-											Building pragmatic UIs for operators and clients with
-											<span class="text-secondary-2">Angular</span> and
-											<span class="text-secondary-2">TypeScript</span>
-											- fast, readable, and easy to maintain.
+											{#if $locale === 'fr'}
+												Interfaces operateurs et clients avec <span class="text-secondary-2"
+													>Angular</span
+												>
+												et <span class="text-secondary-2">TypeScript</span> : UX pragmatique, flux clairs,
+												code maintenable.
+											{:else}
+												Building pragmatic UIs for operators and clients with
+												<span class="text-secondary-2">Angular</span> and
+												<span class="text-secondary-2">TypeScript</span>
+												- clear data flows, fast UIs, maintainable code.
+											{/if}
 										</p>
 									</div>
 								</div>
@@ -1252,13 +1470,24 @@ $ deliverable: maintainable systems</code
 												fill="#1F1F24"
 											/>
 										</svg>
-										<h6 class="my-3 fw-medium">CI/CD & Code Quality</h6>
+										<h6 class="my-3 fw-medium">
+											{$locale === 'fr' ? 'CI/CD & Qualite' : 'CI/CD & Code Quality'}
+										</h6>
 										<p class="fs-7 text-300 fw-regular">
-											Automating delivery with <span class="text-secondary-2">GitLab CI</span>,
-											<span class="text-secondary-2">GitHub Actions</span> and
-											<span class="text-secondary-2">Jenkins</span>, plus code quality with
-											<span class="text-secondary-2">Sonar</span> and
-											<span class="text-secondary-2">Maven</span>.
+											{#if $locale === 'fr'}
+												Pipelines <span class="text-secondary-2">CI/CD</span> avec
+												<span class="text-secondary-2">GitLab CI</span>,
+												<span class="text-secondary-2">GitHub Actions</span> et
+												<span class="text-secondary-2">Jenkins</span> - quality gates avec
+												<span class="text-secondary-2">Sonar</span> et
+												<span class="text-secondary-2">Maven</span>, releases reproductibles.
+											{:else}
+												CI/CD pipelines with <span class="text-secondary-2">GitLab CI</span>,
+												<span class="text-secondary-2">GitHub Actions</span> and
+												<span class="text-secondary-2">Jenkins</span> - quality gates with
+												<span class="text-secondary-2">Sonar</span> and
+												<span class="text-secondary-2">Maven</span>, reproducible releases.
+											{/if}
 										</p>
 									</div>
 								</div>
@@ -1276,23 +1505,37 @@ $ deliverable: maintainable systems</code
 												fill="#1F1F24"
 											/>
 										</svg>
-										<h6 class="my-3 fw-medium">Mobile Apps</h6>
+										<h6 class="my-3 fw-medium">
+											{$locale === 'fr' ? 'Applications mobiles' : 'Mobile Apps'}
+										</h6>
 										<p class="fs-7 text-300 fw-regular">
-											Shipping cross-platform apps with <span class="text-secondary-2"
-												>React Native</span
-											>
-											and <span class="text-secondary-2">Expo</span> - ideal for monitoring and field
-											tools.
+											{#if $locale === 'fr'}
+												Apps cross-platform avec <span class="text-secondary-2">React Native</span>
+												et <span class="text-secondary-2">Expo</span> : ideal pour monitoring et outils
+												d'exploitation.
+											{:else}
+												Shipping cross-platform apps with <span class="text-secondary-2"
+													>React Native</span
+												>
+												and <span class="text-secondary-2">Expo</span> - ideal for monitoring and on-the-go
+												operations tools.
+											{/if}
 										</p>
 									</div>
 								</div>
 							</div>
 							<div class="text-center pt-60">
 								<p class="text-300">
-									Excited to take on <span class="text-dark">new projects</span> and collaborate.
-									<br />
-									Let's chat about your ideas.
-									<a href="#contact" class="text-primary-2">Reach out!</a>
+									{#if $locale === 'fr'}
+										Partant pour de <span class="text-dark">nouveaux projets</span> et
+										collaborations.
+										<br />
+										Discutons de vos idees.
+									{:else}
+										Excited to take on <span class="text-dark">new projects</span> and collaborate.
+										<br />
+										Let's chat about your ideas.
+									{/if}
 								</p>
 							</div>
 						</div>
@@ -1324,13 +1567,22 @@ $ deliverable: maintainable systems</code
 							>
 								<circle cx="2.5" cy="3" r="2.5" fill="#A8FF53" />
 							</svg>
-							<span class="text-linear-4 d-flex align-items-center"> Expérience </span>
+							<span class="text-linear-4 d-flex align-items-center">
+								{$locale === 'fr' ? 'Expérience' : 'Experience'}
+							</span>
 						</div>
 						<h3>
-							2+
-							<span class="text-300">années d'</span>
-							expérience
-							<span class="text-300"> en ingénierie logicielle </span>
+							{#if $locale === 'fr'}
+								2+
+								<span class="text-300">années d'</span>
+								expérience
+								<span class="text-300"> en ingénierie logicielle </span>
+							{:else}
+								2+
+								<span class="text-300">years of</span>
+								experience
+								<span class="text-300"> in software engineering </span>
+							{/if}
 						</h3>
 						<div class="row mt-5">
 							<div class="col-lg-4">
@@ -1428,7 +1680,7 @@ $ deliverable: maintainable systems</code
 										fill="#62A92B"
 									/>
 								</svg>
-								<h2 class="mb-0 ms-2">Education</h2>
+								<h2 class="mb-0 ms-2">{$locale === 'fr' ? 'Formation' : 'Education'}</h2>
 							</div>
 							<div class="d-flex flex-column h-100 position-relative mt-5">
 								<ul class="ps-3">
@@ -1496,7 +1748,7 @@ $ deliverable: maintainable systems</code
 										fill="#A8FF53"
 									/>
 								</svg>
-								<h2 class="mb-0 ms-2">Informations</h2>
+								<h2 class="mb-0 ms-2">{$locale === 'fr' ? 'Informations' : 'Details'}</h2>
 							</div>
 							<div class="education-info-stack mt-5">
 								<div class="education-info-block" data-aos="fade-up" data-aos-delay="140">
@@ -1504,9 +1756,19 @@ $ deliverable: maintainable systems</code
 										<i class="ri-translate-2 text-primary-2" />
 									</div>
 									<div class="education-info-content">
-										<div class="education-info-label">Langues</div>
-										<div class="education-info-value">Français · Anglais B2 (TOEIC 865)</div>
-										<div class="education-info-sub text-dark">Anglais langue de travail</div>
+										<div class="education-info-label">
+											{$locale === 'fr' ? 'Langues' : 'Languages'}
+										</div>
+										<div class="education-info-value">
+											{$locale === 'fr'
+												? 'Français · Anglais B2 (TOEIC 865)'
+												: 'French · English B2 (TOEIC 865)'}
+										</div>
+										<div class="education-info-sub text-dark">
+											{$locale === 'fr'
+												? 'Anglais langue de travail'
+												: 'English is my working language'}
+										</div>
 									</div>
 								</div>
 								<div class="education-info-block" data-aos="fade-up" data-aos-delay="260">
@@ -1514,11 +1776,19 @@ $ deliverable: maintainable systems</code
 										<i class="ri-heart-pulse-line text-primary-2" />
 									</div>
 									<div class="education-info-content">
-										<div class="education-info-label">Centres d’intérêt</div>
-										<div class="education-info-value">
-											Sport (musculation), compétitions d’algorithmes
+										<div class="education-info-label">
+											{$locale === 'fr' ? 'Centres d’intérêt' : 'Interests'}
 										</div>
-										<div class="education-info-sub text-dark">Curiosité et pratique régulière</div>
+										<div class="education-info-value">
+											{$locale === 'fr'
+												? 'Sport (musculation), compétitions d’algorithmes'
+												: 'Strength training, algorithm competitions'}
+										</div>
+										<div class="education-info-sub text-dark">
+											{$locale === 'fr'
+												? 'Curiosité et pratique régulière'
+												: 'Curious and consistent practice'}
+										</div>
 									</div>
 								</div>
 								<div class="education-info-block" data-aos="fade-up" data-aos-delay="380">
@@ -1526,9 +1796,15 @@ $ deliverable: maintainable systems</code
 										<i class="ri-car-line text-primary-2" />
 									</div>
 									<div class="education-info-content">
-										<div class="education-info-label">Mobilité</div>
-										<div class="education-info-value">Permis B + véhicule</div>
-										<div class="education-info-sub text-dark">Disponible pour déplacements</div>
+										<div class="education-info-label">
+											{$locale === 'fr' ? 'Mobilité' : 'Mobility'}
+										</div>
+										<div class="education-info-value">
+											{$locale === 'fr' ? 'Permis B + véhicule' : 'Driving license + own car'}
+										</div>
+										<div class="education-info-sub text-dark">
+											{$locale === 'fr' ? 'Disponible pour déplacements' : 'Available for travel'}
+										</div>
 									</div>
 								</div>
 							</div>
@@ -1557,7 +1833,9 @@ $ deliverable: maintainable systems</code
 								>
 									<circle cx="2.5" cy="3" r="2.5" fill="#A8FF53" />
 								</svg>
-								<span class="text-linear-4 d-flex align-items-center"> Projects </span>
+								<span class="text-linear-4 d-flex align-items-center">
+									{$locale === 'fr' ? 'Compétences' : 'Skills'}
+								</span>
 							</div>
 							<h3>My Recent Works</h3>
 							<div class="position-relative">
@@ -1796,7 +2074,7 @@ $ deliverable: maintainable systems</code
 								</svg>
 								<span class="text-linear-4 d-flex align-items-center"> Projects </span>
 							</div>
-							<h3>My Skills</h3>
+							<h3>{$locale === 'fr' ? 'Mes compétences' : 'My Skills'}</h3>
 						</div>
 						<div class="container mt-8">
 							<div class="row">
@@ -2289,10 +2567,10 @@ $ deliverable: maintainable systems</code
 				<div
 					class="navigation d-flex align-items-center justify-content-center flex-wrap gap-4 my-4"
 				>
-					<a href="#about" class="fs-6"> About me </a>
-					<a href="#resume" class="fs-6"> Resume </a>
-					<a href="#services" class="fs-6"> Services </a>
-					<a href="#portfolio" class="fs-6"> Portfolio </a>
+					<a href="#about" class="fs-6"> {$locale === 'fr' ? 'A propos' : 'About me'} </a>
+					<a href="#resume" class="fs-6"> {$locale === 'fr' ? 'Parcours' : 'Resume'} </a>
+					<a href="#services" class="fs-6"> {$locale === 'fr' ? 'Services' : 'Services'} </a>
+					<a href="#portfolio" class="fs-6"> {$locale === 'fr' ? 'Experience' : 'Experience'} </a>
 				</div>
 			</div>
 		</div>
