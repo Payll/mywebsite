@@ -1,16 +1,232 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	// Set this to your future photo URL/path to enable the hero image.
 	const heroPhotoSrc: string | null = null;
 
+	type ExperienceItem = {
+		id: string;
+		listTitle: string;
+		period: string;
+		logoSrc: string;
+		logoAlt: string;
+		detailTitle: string;
+		bullets: string[];
+		tags: string[];
+	};
+
+	const experiences: ExperienceItem[] = [
+		{
+			id: 'nablify',
+			listTitle: 'Nablify',
+			period: 'sept. 2025 - present',
+			logoSrc: '/assets/imgs/home-page-2/experience/nablify.png',
+			logoAlt: 'Nablify',
+			detailTitle: 'Specialiste en ingenierie logicielle · Nablify',
+			bullets: [
+				"Backend Python en Agile/Scrum sur plateforme a plusieurs milliers d'utilisateurs mensuels.",
+				'Deploiement et MCO sur Google Cloud (GCP), performance et supervision.',
+				'Recueil des besoins, documentation, restitutions equipe/clients.'
+			],
+			tags: ['Python', 'GCP', 'Docker', 'C/C++', 'Agile/Scrum']
+		},
+		{
+			id: 'wi6-engineer',
+			listTitle: 'Wi6labs · Ingenieur logiciel',
+			period: 'sept. 2024 - dec. 2024',
+			logoSrc: '/assets/imgs/home-page-2/experience/Wi6labs.png',
+			logoAlt: 'Wi6labs',
+			detailTitle: 'Ingenieur logiciel & full stack · Wi6labs',
+			bullets: [
+				'Developpement full-stack sur solutions IoT cloud + embarquees (architecture PUB/SUB).',
+				'Cloud: backend PHP/C++, frontend Angular; supervision ELK + Grafana; traitement codecs JS/Python/PHP; templating Twig.',
+				'Embarque: C/C++; integration Modbus, BACnet, MQTT; gestion des sorties et communication materiel.'
+			],
+			tags: ['C', 'C++', 'PHP', 'Angular', 'Twig', 'MQTT', 'BACnet', 'Modbus', 'ELK', 'Grafana']
+		},
+		{
+			id: 'wi6-apprentice',
+			listTitle: 'Wi6labs · Alternance',
+			period: 'sept. 2023 - sept. 2024',
+			logoSrc: '/assets/imgs/home-page-2/experience/Wi6labs.png',
+			logoAlt: 'Wi6labs (alternance)',
+			detailTitle: 'Apprentissage developpement logiciel · Wi6labs',
+			bullets: [
+				'Full-stack sur solutions IoT embarquees, avec support de composants cloud (architecture PUB/SUB).',
+				"Embarque: ajout d'une nouvelle fonctionnalite de sortie via integration BACnet; ameliorations backend C++.",
+				'Cloud: backend PHP/C++, frontend Angular; supervision ELK; codecs JS/Python/PHP; templating Twig.'
+			],
+			tags: ['C++', 'PHP', 'Angular', 'BACnet', 'MQTT', 'Modbus', 'Twig', 'ELK']
+		},
+		{
+			id: 'infoscope',
+			listTitle: 'Infoscope Hellas',
+			period: 'juin 2023 - sept. 2023',
+			logoSrc: '/assets/imgs/home-page-2/experience/infoscopehellas.png',
+			logoAlt: 'Infoscope Hellas',
+			detailTitle: 'Stage developpement mobile · Infoscope Hellas',
+			bullets: [
+				'Developpement de "Meterscope Mobile" pour monitorer des equipements IoT.',
+				"Analyse de l'application existante, cadrage des besoins et ameliorations.",
+				'React Native + Expo; deploiement Android et iOS.'
+			],
+			tags: ['React Native', 'Expo', 'TypeScript', 'IoT', 'GitLab']
+		},
+		{
+			id: 'keolis',
+			listTitle: 'Keolis Rennes · Stage qualite',
+			period: 'juin 2022 - sept. 2022',
+			logoSrc: '/assets/imgs/home-page-2/experience/keolis.png',
+			logoAlt: 'Keolis Rennes',
+			detailTitle: 'Assistant ingenieur qualite · Keolis Rennes',
+			bullets: [
+				'Digitalisation et automatisation du controle qualite (Parc Relais).',
+				"Formulaires via Kizeo Forms + outil d'analyse Excel pour interpretation des donnees.",
+				"Mise en place d'un flux automatise de la saisie a l'analyse, gain d'efficacite du process."
+			],
+			tags: ['Kizeo Forms', 'Excel', 'Process', 'Qualite']
+		},
+		{
+			id: 'wi6-first-internship',
+			listTitle: 'Wi6labs · Stage production',
+			period: 'avr. 2021 - aout 2021',
+			logoSrc: '/assets/imgs/home-page-2/experience/Wi6labs.png',
+			logoAlt: 'Wi6labs (stage production)',
+			detailTitle: 'Assistant automatisation production · Wi6labs',
+			bullets: [
+				"Mise en place d'un nouveau systeme de production et definition des process.",
+				"Developpement d'un outil de production en Python, approche Agile.",
+				"Collaboration avec un cabinet d'audit externe; outil adopte en production."
+			],
+			tags: ['Python', 'Agile', 'Git', 'Jenkins']
+		}
+	];
+
+	let selectedExperienceId: ExperienceItem['id'] = experiences[0]?.id ?? 'nablify';
+	let selectedExperience: ExperienceItem | null = null;
+	$: selectedExperience =
+		experiences.find((e) => e.id === selectedExperienceId) ?? experiences[0] ?? null;
+
+	type CursorTarget =
+		| { kind: 'title' }
+		| { kind: 'bullet'; index: number }
+		| { kind: 'tag'; index: number }
+		| null;
+
+	let typedTitle = '';
+	let typedBullets: string[] = [];
+	let typedTags: string[] = [];
+	let isTyping = false;
+	let cursorTarget: CursorTarget = null;
+	let isMounted = false;
+	let lastSelectedExperienceId: ExperienceItem['id'] | null = null;
+	let typingTimeout: ReturnType<typeof setTimeout> | null = null;
+	let prefersReducedMotion = false;
+
+	function stopTyping(): void {
+		if (typingTimeout) {
+			clearTimeout(typingTimeout);
+			typingTimeout = null;
+		}
+		isTyping = false;
+		cursorTarget = null;
+	}
+
+	function resetTyped(exp: ExperienceItem): void {
+		typedTitle = '';
+		typedBullets = exp.bullets.map(() => '');
+		typedTags = exp.tags.map(() => '');
+	}
+
+	type TypeSegment =
+		| { kind: 'title'; text: string }
+		| { kind: 'bullet'; index: number; text: string }
+		| { kind: 'tag'; index: number; text: string };
+
+	function startTypingExperience(exp: ExperienceItem): void {
+		stopTyping();
+		if (prefersReducedMotion) {
+			typedTitle = exp.detailTitle;
+			typedBullets = [...exp.bullets];
+			typedTags = [...exp.tags];
+			return;
+		}
+		resetTyped(exp);
+
+		isTyping = true;
+
+		const segments: TypeSegment[] = [
+			{ kind: 'title', text: exp.detailTitle },
+			...exp.bullets.map((text, index): TypeSegment => ({ kind: 'bullet', index, text })),
+			...exp.tags.map((text, index): TypeSegment => ({ kind: 'tag', index, text }))
+		];
+
+		let segIndex = 0;
+		let charIndex = 0;
+
+		const typeDelayForChar = (ch: string): number => {
+			if (ch === ' ') return 4;
+			return 8;
+		};
+
+		const tick = () => {
+			const seg = segments[segIndex];
+			if (!seg) {
+				isTyping = false;
+				cursorTarget = null;
+				typingTimeout = null;
+				return;
+			}
+
+			cursorTarget =
+				seg.kind === 'title'
+					? { kind: 'title' }
+					: seg.kind === 'bullet'
+					? { kind: 'bullet', index: seg.index }
+					: { kind: 'tag', index: seg.index };
+
+			const nextChar = seg.text.charAt(charIndex);
+			if (nextChar) {
+				if (seg.kind === 'title') typedTitle += nextChar;
+				if (seg.kind === 'bullet') typedBullets[seg.index] += nextChar;
+				if (seg.kind === 'tag') typedTags[seg.index] += nextChar;
+				charIndex += 1;
+				typingTimeout = setTimeout(tick, typeDelayForChar(nextChar));
+				return;
+			}
+
+			// Next segment
+			segIndex += 1;
+			charIndex = 0;
+			typingTimeout = setTimeout(tick, 50);
+		};
+		tick();
+	}
+
 	onMount(() => {
+		isMounted = true;
+		prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		lastSelectedExperienceId = selectedExperienceId;
+		if (selectedExperience) startTypingExperience(selectedExperience);
+
 		document.body.classList.add('home-page-2');
 
 		return () => {
+			stopTyping();
 			document.body.classList.remove('home-page-2');
 		};
 	});
+
+	onDestroy(() => {
+		stopTyping();
+	});
+
+	$: if (isMounted && selectedExperience) {
+		if (lastSelectedExperienceId !== selectedExperienceId) {
+			lastSelectedExperienceId = selectedExperienceId;
+			startTypingExperience(selectedExperience);
+		}
+	}
 </script>
 
 <svelte:head>
@@ -297,27 +513,47 @@
 											<ul class="carouselTicker__list">
 												<li class="carouselTicker__item">
 													<a href="/#" class="brand-logo icon_60 icon-shape rounded-3">
-														<img src="/assets/imgs/home-page-2/hero-1/icon-1.svg" alt="brand" />
+														<img
+															class="w-100 h-100 p-2"
+															src="/assets/imgs/skills/tech/python.svg"
+															alt="Python"
+														/>
 													</a>
 												</li>
 												<li class="carouselTicker__item">
 													<a href="/#" class="brand-logo icon_60 icon-shape rounded-3">
-														<img src="/assets/imgs/home-page-2/hero-1/icon-2.svg" alt="brand" />
+														<img
+															class="w-100 h-100 p-2"
+															src="/assets/imgs/skills/tech/c.svg"
+															alt="C"
+														/>
 													</a>
 												</li>
 												<li class="carouselTicker__item">
 													<a href="/#" class="brand-logo icon_60 icon-shape rounded-3">
-														<img src="/assets/imgs/home-page-2/hero-1/icon-3.svg" alt="brand" />
+														<img
+															class="w-100 h-100 p-2"
+															src="/assets/imgs/skills/tech/c-plus-plus.svg"
+															alt="C++"
+														/>
 													</a>
 												</li>
 												<li class="carouselTicker__item">
 													<a href="/#" class="brand-logo icon_60 icon-shape rounded-3">
-														<img src="/assets/imgs/home-page-2/hero-1/icon-4.svg" alt="brand" />
+														<img
+															class="w-100 h-100 p-2"
+															src="/assets/imgs/skills/tech/docker.svg"
+															alt="Docker"
+														/>
 													</a>
 												</li>
 												<li class="carouselTicker__item">
 													<a href="/#" class="brand-logo icon_60 icon-shape rounded-3">
-														<img src="/assets/imgs/home-page-2/hero-1/icon-5.svg" alt="brand" />
+														<img
+															class="w-100 h-100 p-2"
+															src="/assets/imgs/skills/tech/git.svg"
+															alt="Git"
+														/>
 													</a>
 												</li>
 											</ul>
@@ -848,14 +1084,67 @@
 			<div class="rounded-3 border border-1 position-relative overflow-hidden">
 				<div class="box-linear-animation position-relative z-1 p-lg-5 p-1 p-md-4">
 					<div class="position-relative z-1">
-						<div class="text-center">
-							<h3>
-								Designing solutions
-								<span class="text-300">
-									customized<br />
-									to meet your requirements
-								</span>
-							</h3>
+						<div class="services-intro">
+							<div class="row align-items-center g-4">
+								<div class="col-lg-7">
+									<div
+										class="d-flex align-items-center justify-content-center justify-content-lg-start"
+									>
+										<svg
+											class="text-primary-2 me-2"
+											xmlns="http://www.w3.org/2000/svg"
+											width="5"
+											height="6"
+											viewBox="0 0 5 6"
+											fill="none"
+										>
+											<circle cx="2.5" cy="3" r="2.5" fill="#A8FF53" />
+										</svg>
+										<span class="text-linear-4 d-flex align-items-center"
+											>From brief to production</span
+										>
+									</div>
+									<h3 class="mt-2 text-center text-lg-start">
+										Designing solutions
+										<span class="text-300">
+											custom-built<br />
+											for cloud + embedded systems
+										</span>
+									</h3>
+									<p class="text-300 mt-3 mb-0 text-center text-lg-start">
+										IoT architectures, real-world protocols, observability, and shipping discipline.
+									</p>
+									<div class="services-chips mt-4 justify-content-center justify-content-lg-start">
+										<span class="services-chip">PUB/SUB</span>
+										<span class="services-chip">MQTT</span>
+										<span class="services-chip">BACnet</span>
+										<span class="services-chip">Modbus</span>
+										<span class="services-chip">ELK</span>
+										<span class="services-chip">Grafana</span>
+										<span class="services-chip">Jenkins</span>
+										<span class="services-chip">SonarQube</span>
+									</div>
+								</div>
+								<div class="col-lg-5">
+									<div class="services-terminal">
+										<div class="services-terminal__header">
+											<div class="services-terminal__dots" aria-hidden="true">
+												<span />
+												<span />
+												<span />
+											</div>
+											<span class="services-terminal__title">yann@portfolio:~</span>
+										</div>
+										<pre class="services-terminal__body"><code
+												>$ scope: cloud + embedded IoT
+$ architecture: message-driven (pub/sub)
+$ stack: C/C++, PHP, Python, Angular
+$ ops: ELK, Grafana, CI/CD
+$ deliverable: maintainable systems</code
+											></pre>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div class="container mt-5">
 							<div class="row g-4">
@@ -873,13 +1162,15 @@
 												fill="#1F1F24"
 											/>
 										</svg>
-										<h6 class="my-3 fw-medium">Web & App Development</h6>
+										<h6 class="my-3 fw-medium">Cloud IoT Backends</h6>
 										<p class="fs-7 text-300 fw-regular">
-											Crafting visually appealing and user-friendly interfaces using <span
-												class="text-secondary-2">HTML</span
-											>, <span class="text-secondary-2">CSS</span>,
-											<span class="text-secondary-2">JavaScript</span>, and modern frameworks like
-											React and Angular.
+											Building reliable services around a <span class="text-secondary-2"
+												>PUB/SUB</span
+											>
+											architecture, with codec processing and JSON templating. Comfortable across
+											<span class="text-secondary-2">C++</span>,
+											<span class="text-secondary-2">PHP</span>, and
+											<span class="text-secondary-2">Python</span>.
 										</p>
 									</div>
 								</div>
@@ -897,12 +1188,14 @@
 												fill="#1F1F24"
 											/>
 										</svg>
-										<h6 class="my-3 fw-medium">Database Management</h6>
+										<h6 class="my-3 fw-medium">Embedded & Protocols</h6>
 										<p class="fs-7 text-300 fw-regular">
-											Designing and managing databases with SQL and NoSQL technologies such as <span
-												class="text-secondary-2">MySQL</span
-											>, <span class="text-secondary-2">PostgreSQL</span>, and
-											<span class="text-secondary-2">MongoDB</span>.
+											Integrating real-world field protocols like <span class="text-secondary-2"
+												>MQTT</span
+											>,
+											<span class="text-secondary-2">BACnet</span>, and
+											<span class="text-secondary-2">Modbus</span>
+											to control outputs and exchange data with hardware.
 										</p>
 									</div>
 								</div>
@@ -920,10 +1213,12 @@
 												fill="#1F1F24"
 											/>
 										</svg>
-										<h6 class="my-3 fw-medium">API Development</h6>
+										<h6 class="my-3 fw-medium">Observability</h6>
 										<p class="fs-7 text-300 fw-regular">
-											Creating and integrating <span class="text-secondary-2">RESTful APIs</span> to
-											enable smooth communication between front-end and back-end systems.
+											Keeping production visible with dashboards and logs using
+											<span class="text-secondary-2">ELK</span> and
+											<span class="text-secondary-2">Grafana</span>
+											so issues are found before users feel them.
 										</p>
 									</div>
 								</div>
@@ -941,11 +1236,12 @@
 												fill="#1F1F24"
 											/>
 										</svg>
-										<h6 class="my-3 fw-medium">Performance Optimization</h6>
+										<h6 class="my-3 fw-medium">Frontend Dashboards</h6>
 										<p class="fs-7 text-300 fw-regular">
-											Improving the speed and performance of web applications to provide a better
-											user experience. Work with <span class="text-secondary-2">Nodejs</span>,
-											<span class="text-secondary-2">Express</span>
+											Building pragmatic UIs for operators and clients with
+											<span class="text-secondary-2">Angular</span> and
+											<span class="text-secondary-2">TypeScript</span>
+											- fast, readable, and easy to maintain.
 										</p>
 									</div>
 								</div>
@@ -963,11 +1259,11 @@
 												fill="#1F1F24"
 											/>
 										</svg>
-										<h6 class="my-3 fw-medium">E-commerce Solutions</h6>
+										<h6 class="my-3 fw-medium">CI/CD & Code Quality</h6>
 										<p class="fs-7 text-300 fw-regular">
-											Developing scalable and secure payment solutions for <span
-												class="text-secondary-2">e-commerce platforms</span
-											> tailored to your business needs.
+											Automating delivery with <span class="text-secondary-2">Jenkins</span> and
+											enforcing standards with <span class="text-secondary-2">SonarQube</span>,
+											across GitHub/GitLab/Gitea workflows.
 										</p>
 									</div>
 								</div>
@@ -985,10 +1281,13 @@
 												fill="#1F1F24"
 											/>
 										</svg>
-										<h6 class="my-3 fw-medium">Integrating AI</h6>
+										<h6 class="my-3 fw-medium">Mobile Apps</h6>
 										<p class="fs-7 text-300 fw-regular">
-											Boost your applications with AI for improved efficiency, automation, and
-											enhanced user experience
+											Shipping cross-platform apps with <span class="text-secondary-2"
+												>React Native</span
+											>
+											and <span class="text-secondary-2">Expo</span> - ideal for monitoring and field
+											tools.
 										</p>
 									</div>
 								</div>
@@ -1034,88 +1333,68 @@
 						</div>
 						<h3>
 							2+
-							<span class="text-300">années d' </span>
+							<span class="text-300">années d'</span>
 							expérience
 							<span class="text-300"> en ingénierie logicielle </span>
 						</h3>
 						<div class="row mt-5">
 							<div class="col-lg-4">
-								<div class="d-flex flex-column gap-2">
-									<a href="/#" class="technology border border-1 rounded-3 p-3">
-										<div class="d-flex align-items-center gap-2">
-											<img
-												src="/assets/imgs/home-page-2/experience/nablify.png"
-												alt="Nablify"
-												style="width: 48px; height: 48px; object-fit: contain"
-											/>
-											<div class="d-flex flex-column ms-2">
-												<h5 class="mb-1">Nablify</h5>
-												<span class="text-300">sept. 2025 - présent</span>
+								<div class="d-flex flex-column gap-2 experience-list-scroll">
+									{#each experiences as exp}
+										<a
+											href="/#"
+											class="technology border border-1 rounded-3 p-3"
+											class:is-active={exp.id === selectedExperienceId}
+											on:click|preventDefault={() => (selectedExperienceId = exp.id)}
+										>
+											<div class="d-flex align-items-center gap-2">
+												<img
+													src={exp.logoSrc}
+													alt={exp.logoAlt}
+													style="width: 48px; height: 48px; object-fit: contain"
+												/>
+												<div class="d-flex flex-column ms-2">
+													<h5 class="mb-1">{exp.listTitle}</h5>
+													<span class="text-300">{exp.period}</span>
+												</div>
 											</div>
-										</div>
-									</a>
-									<a href="/#" class="technology border border-1 rounded-3 p-3">
-										<div class="d-flex align-items-center gap-2">
-											<img
-												src="/assets/imgs/home-page-2/experience/Wi6labs.png"
-												alt="Wi6labs"
-												style="width: 48px; height: 48px; object-fit: contain"
-											/>
-											<div class="d-flex flex-column ms-2">
-												<h5 class="mb-1">Wi6labs · Ingénieur logiciel</h5>
-												<span class="text-300">sept. 2024 - juin 2025</span>
-											</div>
-										</div>
-									</a>
-									<a href="/#" class="technology border border-1 rounded-3 p-3">
-										<div class="d-flex align-items-center gap-2">
-											<img
-												src="/assets/imgs/home-page-2/experience/Wi6labs.png"
-												alt="Wi6labs alternance"
-												style="width: 48px; height: 48px; object-fit: contain"
-											/>
-											<div class="d-flex flex-column ms-2">
-												<h5 class="mb-1">Wi6labs · Alternance</h5>
-												<span class="text-300">sept. 2023 - sept. 2024</span>
-											</div>
-										</div>
-									</a>
-									<a href="/#" class="technology border border-1 rounded-3 p-3">
-										<div class="d-flex align-items-center gap-2">
-											<img
-												src="/assets/imgs/home-page-2/experience/infoscopehellas.png"
-												alt="Infoscope Hellas"
-												style="width: 48px; height: 48px; object-fit: contain"
-											/>
-											<div class="d-flex flex-column ms-2">
-												<h5 class="mb-1">Infoscope Hellas</h5>
-												<span class="text-300">juin 2023 - sept. 2023</span>
-											</div>
-										</div>
-									</a>
+										</a>
+									{/each}
 								</div>
 							</div>
 							<div class="col-lg-8 ps-lg-5 mt-5 mt-lg-0">
-								<h6 class="text-linear-4">Spécialiste en ingénierie logicielle · Nablify</h6>
-								<ul class="mt-4">
-									<li class="text-dark mb-3">
-										Backend Python en Agile/Scrum sur plateforme à plusieurs milliers d’utilisateurs
-										mensuels.
-									</li>
-									<li class="text-dark mb-3">
-										Déploiement et MCO sur Google Cloud (GCP), performance et supervision.
-									</li>
-									<li class="text-dark mb-3">
-										Recueil des besoins, documentation, restitutions équipe/clients.
-									</li>
-								</ul>
-								<div class="d-flex flex-wrap align-items-center gap-3 mt-7">
-									<a href="/#" class="text-300 border border-1 px-3 py-1">Python</a>
-									<a href="/#" class="text-300 border border-1 px-3 py-1">GCP</a>
-									<a href="/#" class="text-300 border border-1 px-3 py-1">Docker</a>
-									<a href="/#" class="text-300 border border-1 px-3 py-1">C/C++</a>
-									<a href="/#" class="text-300 border border-1 px-3 py-1">Agile/Scrum</a>
-								</div>
+								{#if selectedExperience}
+									<h6 class="text-linear-4">
+										<span class="experience-typed">{typedTitle}</span>
+										{#if isTyping && cursorTarget && cursorTarget.kind === 'title'}
+											<span class="experience-type-cursor" aria-hidden="true" />
+										{/if}
+									</h6>
+									<ul class="mt-4">
+										{#each typedBullets as bulletText, i}
+											{#if bulletText.length > 0 || (isTyping && cursorTarget && cursorTarget.kind === 'bullet' && cursorTarget.index === i)}
+												<li class="text-dark mb-3">
+													<span class="experience-typed">{bulletText}</span>
+													{#if isTyping && cursorTarget && cursorTarget.kind === 'bullet' && cursorTarget.index === i}
+														<span class="experience-type-cursor" aria-hidden="true" />
+													{/if}
+												</li>
+											{/if}
+										{/each}
+									</ul>
+									<div class="d-flex flex-wrap align-items-center gap-3 mt-7">
+										{#each typedTags as tagText, i}
+											{#if tagText.length > 0 || (isTyping && cursorTarget && cursorTarget.kind === 'tag' && cursorTarget.index === i)}
+												<a href="/#" class="text-300 border border-1 px-3 py-1">
+													<span class="experience-typed">{tagText}</span>
+													{#if isTyping && cursorTarget && cursorTarget.kind === 'tag' && cursorTarget.index === i}
+														<span class="experience-type-cursor" aria-hidden="true" />
+													{/if}
+												</a>
+											{/if}
+										{/each}
+									</div>
+								{/if}
 							</div>
 						</div>
 					</div>
@@ -1254,240 +1533,242 @@
 		</div>
 	</section>
 
-	<!-- projects -->
-	<section class="section-projects-2 pt-5">
-		<div class="container">
-			<div class="rounded-3 border border-1 position-relative overflow-hidden">
-				<div class="box-linear-animation position-relative z-1">
-					<div class="p-lg-8 p-md-6 p-3 position-relative z-1">
-						<div class="d-flex align-items-center">
-							<svg
-								class="text-primary-2 me-2"
-								xmlns="http://www.w3.org/2000/svg"
-								width="5"
-								height="6"
-								viewBox="0 0 5 6"
-								fill="none"
-							>
-								<circle cx="2.5" cy="3" r="2.5" fill="#A8FF53" />
-							</svg>
-							<span class="text-linear-4 d-flex align-items-center"> Projects </span>
-						</div>
-						<h3>My Recent Works</h3>
-						<div class="position-relative">
-							<div class="swiper slider-two pb-3 position-relative">
-								<div class="swiper-wrapper">
-									<div class="swiper-slide">
-										<div class="p-lg-5 p-md-4 p-3 border border-1 mt-5 bg-3">
-											<div class="row">
-												<div class="col-lg-5">
-													<img
-														class="w-100"
-														src="/assets/imgs/home-page-2/projects/img-1.png"
-														alt="zelio"
-													/>
+	<!-- projects (hidden for now) -->
+	{#if false}
+		<section class="section-projects-2 pt-5">
+			<div class="container">
+				<div class="rounded-3 border border-1 position-relative overflow-hidden">
+					<div class="box-linear-animation position-relative z-1">
+						<div class="p-lg-8 p-md-6 p-3 position-relative z-1">
+							<div class="d-flex align-items-center">
+								<svg
+									class="text-primary-2 me-2"
+									xmlns="http://www.w3.org/2000/svg"
+									width="5"
+									height="6"
+									viewBox="0 0 5 6"
+									fill="none"
+								>
+									<circle cx="2.5" cy="3" r="2.5" fill="#A8FF53" />
+								</svg>
+								<span class="text-linear-4 d-flex align-items-center"> Projects </span>
+							</div>
+							<h3>My Recent Works</h3>
+							<div class="position-relative">
+								<div class="swiper slider-two pb-3 position-relative">
+									<div class="swiper-wrapper">
+										<div class="swiper-slide">
+											<div class="p-lg-5 p-md-4 p-3 border border-1 mt-5 bg-3">
+												<div class="row">
+													<div class="col-lg-5">
+														<img
+															class="w-100"
+															src="/assets/imgs/home-page-2/projects/img-1.png"
+															alt="zelio"
+														/>
+													</div>
+													<div class="col-lg-7 ps-lg-5 mt-5 mt-lg-0">
+														<h4 class="text-linear-4">
+															Integrate AI into the <br />
+															ecommerce system
+														</h4>
+														<p>
+															Developed an online learning platform with course management, quizzes,
+															and progress tracking.
+														</p>
+														<ul class="mt-4 list-unstyled">
+															<li class="text-secondary-2 mb-3 border-bottom pb-3">Project Info</li>
+															<li class="text-dark mb-3 border-bottom pb-3">
+																<div class="d-flex justify-content-between">
+																	<p class="text-dark mb-0 text-end">Client</p>
+																	<p class="text-300 mb-0 text-end">Conceptual JSC</p>
+																</div>
+															</li>
+															<li class="text-dark mb-3 border-bottom pb-3">
+																<div class="d-flex justify-content-between">
+																	<p class="text-dark mb-0 text-end">Completion Time</p>
+																	<p class="text-300 mb-0 text-end">6 months</p>
+																</div>
+															</li>
+															<li class="text-dark mb-3 border-bottom pb-3">
+																<div class="d-flex justify-content-between">
+																	<p class="text-dark mb-0 text-end">Technologies</p>
+																	<p class="text-300 mb-0 text-end">
+																		Node.js, React, MongoDB, Stripe
+																	</p>
+																</div>
+															</li>
+														</ul>
+														<div class="d-flex flex-wrap align-items-center gap-3 mt-7">
+															<a
+																href="/#"
+																class="text-300 border-bottom border-1 px-2 pb-2 link-hover"
+															>
+																<svg
+																	xmlns="http://www.w3.org/2000/svg"
+																	width="13"
+																	height="13"
+																	viewBox="0 0 13 13"
+																	fill="none"
+																>
+																	<path
+																		d="M11.0037 3.91421L2.39712 12.5208L0.98291 11.1066L9.5895 2.5H2.00373V0.5H13.0037V11.5H11.0037V3.91421Z"
+																		fill="#8F8F92"
+																	/>
+																</svg>
+																Live Demo
+															</a>
+															<a
+																href="/#"
+																class="text-300 border-bottom border-1 px-2 pb-2 link-hover"
+															>
+																<svg
+																	xmlns="http://www.w3.org/2000/svg"
+																	width="24"
+																	height="25"
+																	viewBox="0 0 24 25"
+																	fill="none"
+																>
+																	<path
+																		d="M12.001 2.5C6.47598 2.5 2.00098 6.975 2.00098 12.5C2.00098 16.925 4.86348 20.6625 8.83848 21.9875C9.33848 22.075 9.52598 21.775 9.52598 21.5125C9.52598 21.275 9.51348 20.4875 9.51348 19.65C7.00098 20.1125 6.35098 19.0375 6.15098 18.475C6.03848 18.1875 5.55098 17.3 5.12598 17.0625C4.77598 16.875 4.27598 16.4125 5.11348 16.4C5.90098 16.3875 6.46348 17.125 6.65098 17.425C7.55098 18.9375 8.98848 18.5125 9.56348 18.25C9.65098 17.6 9.91348 17.1625 10.201 16.9125C7.97598 16.6625 5.65098 15.8 5.65098 11.975C5.65098 10.8875 6.03848 9.9875 6.67598 9.2875C6.57598 9.0375 6.22598 8.0125 6.77598 6.6375C6.77598 6.6375 7.61348 6.375 9.52598 7.6625C10.326 7.4375 11.176 7.325 12.026 7.325C12.876 7.325 13.726 7.4375 14.526 7.6625C16.4385 6.3625 17.276 6.6375 17.276 6.6375C17.826 8.0125 17.476 9.0375 17.376 9.2875C18.0135 9.9875 18.401 10.875 18.401 11.975C18.401 15.8125 16.0635 16.6625 13.8385 16.9125C14.201 17.225 14.5135 17.825 14.5135 18.7625C14.5135 20.1 14.501 21.175 14.501 21.5125C14.501 21.775 14.6885 22.0875 15.1885 21.9875C19.259 20.6133 21.9999 16.7963 22.001 12.5C22.001 6.975 17.526 2.5 12.001 2.5Z"
+																		fill="#8F8F92"
+																	/>
+																</svg>
+																View on Github
+															</a>
+														</div>
+													</div>
 												</div>
-												<div class="col-lg-7 ps-lg-5 mt-5 mt-lg-0">
-													<h4 class="text-linear-4">
-														Integrate AI into the <br />
-														ecommerce system
-													</h4>
-													<p>
-														Developed an online learning platform with course management, quizzes,
-														and progress tracking.
-													</p>
-													<ul class="mt-4 list-unstyled">
-														<li class="text-secondary-2 mb-3 border-bottom pb-3">Project Info</li>
-														<li class="text-dark mb-3 border-bottom pb-3">
-															<div class="d-flex justify-content-between">
-																<p class="text-dark mb-0 text-end">Client</p>
-																<p class="text-300 mb-0 text-end">Conceptual JSC</p>
-															</div>
-														</li>
-														<li class="text-dark mb-3 border-bottom pb-3">
-															<div class="d-flex justify-content-between">
-																<p class="text-dark mb-0 text-end">Completion Time</p>
-																<p class="text-300 mb-0 text-end">6 months</p>
-															</div>
-														</li>
-														<li class="text-dark mb-3 border-bottom pb-3">
-															<div class="d-flex justify-content-between">
-																<p class="text-dark mb-0 text-end">Technologies</p>
-																<p class="text-300 mb-0 text-end">
-																	Node.js, React, MongoDB, Stripe
-																</p>
-															</div>
-														</li>
-													</ul>
-													<div class="d-flex flex-wrap align-items-center gap-3 mt-7">
-														<a
-															href="/#"
-															class="text-300 border-bottom border-1 px-2 pb-2 link-hover"
-														>
-															<svg
-																xmlns="http://www.w3.org/2000/svg"
-																width="13"
-																height="13"
-																viewBox="0 0 13 13"
-																fill="none"
+											</div>
+										</div>
+										<div class="swiper-slide">
+											<div class="p-lg-5 p-md-4 p-3 border border-1 mt-5 bg-3">
+												<div class="row">
+													<div class="col-lg-5">
+														<img
+															class="w-100"
+															src="/assets/imgs/home-page-2/projects/img-1.png"
+															alt="zelio"
+														/>
+													</div>
+													<div class="col-lg-7 ps-lg-5 mt-5 mt-lg-0">
+														<h4 class="text-linear-4">
+															Integrate AI into the <br />
+															ecommerce system
+														</h4>
+														<p>
+															Developed an online learning platform with course management, quizzes,
+															and progress tracking.
+														</p>
+														<ul class="mt-4 list-unstyled">
+															<li class="text-secondary-2 mb-3 border-bottom pb-3">Project Info</li>
+															<li class="text-dark mb-3 border-bottom pb-3">
+																<div class="d-flex justify-content-between">
+																	<p class="text-dark mb-0 text-end">Client</p>
+																	<p class="text-300 mb-0 text-end">Conceptual JSC</p>
+																</div>
+															</li>
+															<li class="text-dark mb-3 border-bottom pb-3">
+																<div class="d-flex justify-content-between">
+																	<p class="text-dark mb-0 text-end">Completion Time</p>
+																	<p class="text-300 mb-0 text-end">6 months</p>
+																</div>
+															</li>
+															<li class="text-dark mb-3 border-bottom pb-3">
+																<div class="d-flex justify-content-between">
+																	<p class="text-dark mb-0 text-end">Technologies</p>
+																	<p class="text-300 mb-0 text-end">
+																		Node.js, React, MongoDB, Stripe
+																	</p>
+																</div>
+															</li>
+														</ul>
+														<div class="d-flex flex-wrap align-items-center gap-3 mt-7">
+															<a
+																href="/#"
+																class="text-300 border-bottom border-1 px-2 pb-2 link-hover"
 															>
-																<path
-																	d="M11.0037 3.91421L2.39712 12.5208L0.98291 11.1066L9.5895 2.5H2.00373V0.5H13.0037V11.5H11.0037V3.91421Z"
-																	fill="#8F8F92"
-																/>
-															</svg>
-															Live Demo
-														</a>
-														<a
-															href="/#"
-															class="text-300 border-bottom border-1 px-2 pb-2 link-hover"
-														>
-															<svg
-																xmlns="http://www.w3.org/2000/svg"
-																width="24"
-																height="25"
-																viewBox="0 0 24 25"
-																fill="none"
+																<svg
+																	xmlns="http://www.w3.org/2000/svg"
+																	width="13"
+																	height="13"
+																	viewBox="0 0 13 13"
+																	fill="none"
+																>
+																	<path
+																		d="M11.0037 3.91421L2.39712 12.5208L0.98291 11.1066L9.5895 2.5H2.00373V0.5H13.0037V11.5H11.0037V3.91421Z"
+																		fill="#8F8F92"
+																	/>
+																</svg>
+																Live Demo
+															</a>
+															<a
+																href="/#"
+																class="text-300 border-bottom border-1 px-2 pb-2 link-hover"
 															>
-																<path
-																	d="M12.001 2.5C6.47598 2.5 2.00098 6.975 2.00098 12.5C2.00098 16.925 4.86348 20.6625 8.83848 21.9875C9.33848 22.075 9.52598 21.775 9.52598 21.5125C9.52598 21.275 9.51348 20.4875 9.51348 19.65C7.00098 20.1125 6.35098 19.0375 6.15098 18.475C6.03848 18.1875 5.55098 17.3 5.12598 17.0625C4.77598 16.875 4.27598 16.4125 5.11348 16.4C5.90098 16.3875 6.46348 17.125 6.65098 17.425C7.55098 18.9375 8.98848 18.5125 9.56348 18.25C9.65098 17.6 9.91348 17.1625 10.201 16.9125C7.97598 16.6625 5.65098 15.8 5.65098 11.975C5.65098 10.8875 6.03848 9.9875 6.67598 9.2875C6.57598 9.0375 6.22598 8.0125 6.77598 6.6375C6.77598 6.6375 7.61348 6.375 9.52598 7.6625C10.326 7.4375 11.176 7.325 12.026 7.325C12.876 7.325 13.726 7.4375 14.526 7.6625C16.4385 6.3625 17.276 6.6375 17.276 6.6375C17.826 8.0125 17.476 9.0375 17.376 9.2875C18.0135 9.9875 18.401 10.875 18.401 11.975C18.401 15.8125 16.0635 16.6625 13.8385 16.9125C14.201 17.225 14.5135 17.825 14.5135 18.7625C14.5135 20.1 14.501 21.175 14.501 21.5125C14.501 21.775 14.6885 22.0875 15.1885 21.9875C19.259 20.6133 21.9999 16.7963 22.001 12.5C22.001 6.975 17.526 2.5 12.001 2.5Z"
-																	fill="#8F8F92"
-																/>
-															</svg>
-															View on Github
-														</a>
+																<svg
+																	xmlns="http://www.w3.org/2000/svg"
+																	width="24"
+																	height="25"
+																	viewBox="0 0 24 25"
+																	fill="none"
+																>
+																	<path
+																		d="M12.001 2.5C6.47598 2.5 2.00098 6.975 2.00098 12.5C2.00098 16.925 4.86348 20.6625 8.83848 21.9875C9.33848 22.075 9.52598 21.775 9.52598 21.5125C9.52598 21.275 9.51348 20.4875 9.51348 19.65C7.00098 20.1125 6.35098 19.0375 6.15098 18.475C6.03848 18.1875 5.55098 17.3 5.12598 17.0625C4.77598 16.875 4.27598 16.4125 5.11348 16.4C5.90098 16.3875 6.46348 17.125 6.65098 17.425C7.55098 18.9375 8.98848 18.5125 9.56348 18.25C9.65098 17.6 9.91348 17.1625 10.201 16.9125C7.97598 16.6625 5.65098 15.8 5.65098 11.975C5.65098 10.8875 6.03848 9.9875 6.67598 9.2875C6.57598 9.0375 6.22598 8.0125 6.77598 6.6375C6.77598 6.6375 7.61348 6.375 9.52598 7.6625C10.326 7.4375 11.176 7.325 12.026 7.325C12.876 7.325 13.726 7.4375 14.526 7.6625C16.4385 6.3625 17.276 6.6375 17.276 6.6375C17.826 8.0125 17.476 9.0375 17.376 9.2875C18.0135 9.9875 18.401 10.875 18.401 11.975C18.401 15.8125 16.0635 16.6625 13.8385 16.9125C14.201 17.225 14.5135 17.825 14.5135 18.7625C14.5135 20.1 14.501 21.175 14.501 21.5125C14.501 21.775 14.6885 22.0875 15.1885 21.9875C19.259 20.6133 21.9999 16.7963 22.001 12.5C22.001 6.975 17.526 2.5 12.001 2.5Z"
+																		fill="#8F8F92"
+																	/>
+																</svg>
+																View on Github
+															</a>
+														</div>
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-									<div class="swiper-slide">
-										<div class="p-lg-5 p-md-4 p-3 border border-1 mt-5 bg-3">
-											<div class="row">
-												<div class="col-lg-5">
-													<img
-														class="w-100"
-														src="/assets/imgs/home-page-2/projects/img-1.png"
-														alt="zelio"
-													/>
-												</div>
-												<div class="col-lg-7 ps-lg-5 mt-5 mt-lg-0">
-													<h4 class="text-linear-4">
-														Integrate AI into the <br />
-														ecommerce system
-													</h4>
-													<p>
-														Developed an online learning platform with course management, quizzes,
-														and progress tracking.
-													</p>
-													<ul class="mt-4 list-unstyled">
-														<li class="text-secondary-2 mb-3 border-bottom pb-3">Project Info</li>
-														<li class="text-dark mb-3 border-bottom pb-3">
-															<div class="d-flex justify-content-between">
-																<p class="text-dark mb-0 text-end">Client</p>
-																<p class="text-300 mb-0 text-end">Conceptual JSC</p>
-															</div>
-														</li>
-														<li class="text-dark mb-3 border-bottom pb-3">
-															<div class="d-flex justify-content-between">
-																<p class="text-dark mb-0 text-end">Completion Time</p>
-																<p class="text-300 mb-0 text-end">6 months</p>
-															</div>
-														</li>
-														<li class="text-dark mb-3 border-bottom pb-3">
-															<div class="d-flex justify-content-between">
-																<p class="text-dark mb-0 text-end">Technologies</p>
-																<p class="text-300 mb-0 text-end">
-																	Node.js, React, MongoDB, Stripe
-																</p>
-															</div>
-														</li>
-													</ul>
-													<div class="d-flex flex-wrap align-items-center gap-3 mt-7">
-														<a
-															href="/#"
-															class="text-300 border-bottom border-1 px-2 pb-2 link-hover"
-														>
-															<svg
-																xmlns="http://www.w3.org/2000/svg"
-																width="13"
-																height="13"
-																viewBox="0 0 13 13"
-																fill="none"
-															>
-																<path
-																	d="M11.0037 3.91421L2.39712 12.5208L0.98291 11.1066L9.5895 2.5H2.00373V0.5H13.0037V11.5H11.0037V3.91421Z"
-																	fill="#8F8F92"
-																/>
-															</svg>
-															Live Demo
-														</a>
-														<a
-															href="/#"
-															class="text-300 border-bottom border-1 px-2 pb-2 link-hover"
-														>
-															<svg
-																xmlns="http://www.w3.org/2000/svg"
-																width="24"
-																height="25"
-																viewBox="0 0 24 25"
-																fill="none"
-															>
-																<path
-																	d="M12.001 2.5C6.47598 2.5 2.00098 6.975 2.00098 12.5C2.00098 16.925 4.86348 20.6625 8.83848 21.9875C9.33848 22.075 9.52598 21.775 9.52598 21.5125C9.52598 21.275 9.51348 20.4875 9.51348 19.65C7.00098 20.1125 6.35098 19.0375 6.15098 18.475C6.03848 18.1875 5.55098 17.3 5.12598 17.0625C4.77598 16.875 4.27598 16.4125 5.11348 16.4C5.90098 16.3875 6.46348 17.125 6.65098 17.425C7.55098 18.9375 8.98848 18.5125 9.56348 18.25C9.65098 17.6 9.91348 17.1625 10.201 16.9125C7.97598 16.6625 5.65098 15.8 5.65098 11.975C5.65098 10.8875 6.03848 9.9875 6.67598 9.2875C6.57598 9.0375 6.22598 8.0125 6.77598 6.6375C6.77598 6.6375 7.61348 6.375 9.52598 7.6625C10.326 7.4375 11.176 7.325 12.026 7.325C12.876 7.325 13.726 7.4375 14.526 7.6625C16.4385 6.3625 17.276 6.6375 17.276 6.6375C17.826 8.0125 17.476 9.0375 17.376 9.2875C18.0135 9.9875 18.401 10.875 18.401 11.975C18.401 15.8125 16.0635 16.6625 13.8385 16.9125C14.201 17.225 14.5135 17.825 14.5135 18.7625C14.5135 20.1 14.501 21.175 14.501 21.5125C14.501 21.775 14.6885 22.0875 15.1885 21.9875C19.259 20.6133 21.9999 16.7963 22.001 12.5C22.001 6.975 17.526 2.5 12.001 2.5Z"
-																	fill="#8F8F92"
-																/>
-															</svg>
-															View on Github
-														</a>
-													</div>
-												</div>
-											</div>
-										</div>
+								</div>
+								<div class="position-absolute bottom-0 end-0 gap-2 pb-7 pe-5 d-none d-md-flex">
+									<div class="swiper-button-prev end-0 shadow position-relative">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											fill="none"
+										>
+											<path
+												d="M7.82843 10.9999H20V12.9999H7.82843L13.1924 18.3638L11.7782 19.778L4 11.9999L11.7782 4.22168L13.1924 5.63589L7.82843 10.9999Z"
+												fill="white"
+											/>
+										</svg>
+									</div>
+									<div class="swiper-button-next end-0 shadow position-relative">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											fill="none"
+										>
+											<path
+												d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
+												fill="#A8FF53"
+											/>
+										</svg>
 									</div>
 								</div>
 							</div>
-							<div class="position-absolute bottom-0 end-0 gap-2 pb-7 pe-5 d-none d-md-flex">
-								<div class="swiper-button-prev end-0 shadow position-relative">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="24"
-										height="24"
-										viewBox="0 0 24 24"
-										fill="none"
-									>
-										<path
-											d="M7.82843 10.9999H20V12.9999H7.82843L13.1924 18.3638L11.7782 19.778L4 11.9999L11.7782 4.22168L13.1924 5.63589L7.82843 10.9999Z"
-											fill="white"
-										/>
-									</svg>
-								</div>
-								<div class="swiper-button-next end-0 shadow position-relative">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="24"
-										height="24"
-										viewBox="0 0 24 24"
-										fill="none"
-									>
-										<path
-											d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
-											fill="#A8FF53"
-										/>
-									</svg>
-								</div>
-							</div>
 						</div>
+						<img
+							class="position-absolute top-0 start-0 z-0"
+							src="/assets/imgs/home-page-2/projects/bg.png"
+							alt="zelio"
+						/>
 					</div>
-					<img
-						class="position-absolute top-0 start-0 z-0"
-						src="/assets/imgs/home-page-2/projects/bg.png"
-						alt="zelio"
-					/>
 				</div>
 			</div>
-		</div>
-	</section>
+		</section>
+	{/if}
 
 	<!-- Skills 1 Page 2 -->
 	<section id="skills" class="section-skills-2 pt-5">
@@ -1708,28 +1989,29 @@
 		</div>
 	</section>
 
-	<!-- blog 1 page 2 -->
-	<section id="blog" class="section-blog-2 position-relative pt-60 pb-60">
-		<div class="container">
-			<div class="text-center">
-				<div class="d-flex align-items-center justify-content-center">
-					<svg
-						class="text-primary-2 me-2"
-						xmlns="http://www.w3.org/2000/svg"
-						width="5"
-						height="6"
-						viewBox="0 0 5 6"
-						fill="none"
-					>
-						<circle cx="2.5" cy="3" r="2.5" fill="#A8FF53" />
-					</svg>
-					<span class="text-linear-4 d-flex align-items-center"> Latest Posts </span>
+	<!-- blog 1 page 2 (hidden for now) -->
+	{#if false}
+		<section id="blog" class="section-blog-2 position-relative pt-60 pb-60">
+			<div class="container">
+				<div class="text-center">
+					<div class="d-flex align-items-center justify-content-center">
+						<svg
+							class="text-primary-2 me-2"
+							xmlns="http://www.w3.org/2000/svg"
+							width="5"
+							height="6"
+							viewBox="0 0 5 6"
+							fill="none"
+						>
+							<circle cx="2.5" cy="3" r="2.5" fill="#A8FF53" />
+						</svg>
+						<span class="text-linear-4 d-flex align-items-center"> Latest Posts </span>
+					</div>
+					<h3>From Blog</h3>
 				</div>
-				<h3>From Blog</h3>
-			</div>
-			<div class="row mt-8">
-				<!--prettier-ignore-->
-				<div class="col-lg-4">
+				<div class="row mt-8">
+					<!--prettier-ignore-->
+					<div class="col-lg-4">
     <div class="blog-card rounded-top-2 mb-lg-3 mb-md-5 mb-3">
         <div class="blog-card__image position-relative">
             <div class="zoom-img rounded-2 overflow-hidden">
@@ -1748,211 +2030,227 @@
         </div>
     </div>
 </div>
-				<div class="col-lg-4">
-					<div class="blog-card rounded-top-2 mb-lg-3 mb-md-5 mb-3">
-						<div class="blog-card__image position-relative">
-							<div class="zoom-img rounded-2 overflow-hidden">
-								<img class="w-100" src="/assets/imgs/home-page-2/blog/img-2.png" alt="zelio" />
-								<a
-									class="position-absolute bottom-0 start-0 m-3 text-white-keep border border-white fw-medium px-3 py-1 fs-7 bg-white rounded-2"
-									href="/#">Development</a
-								>
-								<a
-									href="/#"
-									class="blog-card__link position-absolute top-50 start-50 translate-middle icon-md icon-shape rounded-circle"
-								>
-									<i class="ri-arrow-right-up-line" />
-								</a>
-							</div>
-						</div>
-						<div class="blog-card__content position-relative text-center mt-4">
-							<span class="blog-card__date fs-7">March 28, 2023 • 3 min read</span>
-							<h6 class="blog-card__title mt-2">Best Practices for Secure Web Development</h6>
-							<p class="blog-card__description fs-7">
-								Stay ahead of the curve with these emerging trends in UI/UX design.
-							</p>
-							<a href="/#" class="link-overlay position-absolute top-0 start-0 w-100 h-100"
-								><span class="visually-hidden">Open item</span></a
-							>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-4">
-					<div class="blog-card rounded-top-2 mb-lg-3 mb-md-5 mb-3">
-						<div class="blog-card__image position-relative">
-							<div class="zoom-img rounded-2 overflow-hidden">
-								<img class="w-100" src="/assets/imgs/home-page-2/blog/img-3.png" alt="zelio" />
-								<a
-									class="position-absolute bottom-0 start-0 m-3 text-white-keep border border-white fw-medium px-3 py-1 fs-7 bg-white rounded-2"
-									href="/#">Trending</a
-								>
-								<a
-									href="/#"
-									class="blog-card__link position-absolute top-50 start-50 translate-middle icon-md icon-shape rounded-circle"
-								>
-									<i class="ri-arrow-right-up-line" />
-								</a>
-							</div>
-						</div>
-						<div class="blog-card__content position-relative text-center mt-4">
-							<span class="blog-card__date fs-7">March 28, 2023 • 3 min read</span>
-							<h6 class="blog-card__title mt-2">
-								10 JavaScript Frameworks for Web Development in 2024
-							</h6>
-							<p class="blog-card__description fs-7">
-								Stay ahead of the curve with these emerging trends in UI/UX design.
-							</p>
-							<a href="/#" class="link-overlay position-absolute top-0 start-0 w-100 h-100"
-								><span class="visually-hidden">Open item</span></a
-							>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- Contact 1-->
-	<section id="contact" class="section-contact-2 position-relative pb-60 overflow-hidden">
-		<div class="container position-relative z-1">
-			<div class="row align-items-center">
-				<div class="col-lg-7 pb-5 pb-lg-0">
-					<div class="position-relative">
-						<div class="position-relative z-2">
-							<h3 class="text-primary-2 mb-3">Let’s connect</h3>
-							<form action="#">
-								<div class="row g-3">
-									<div class="col-md-6">
-										<input
-											type="text"
-											class="form-control bg-3 border border-1 rounded-3"
-											id="name"
-											name="name"
-											placeholder="Your name"
-											aria-label="username"
-										/>
-									</div>
-									<div class="col-md-6">
-										<input
-											type="text"
-											class="form-control bg-3 border border-1 rounded-3"
-											id="phone"
-											name="phone"
-											placeholder="Phone"
-											aria-label="phone"
-										/>
-									</div>
-									<div class="col-md-6">
-										<input
-											type="text"
-											class="form-control bg-3 border border-1 rounded-3"
-											id="email"
-											name="email"
-											placeholder="Emaill"
-											aria-label="email"
-										/>
-									</div>
-									<div class="col-md-6">
-										<input
-											type="text"
-											class="form-control bg-3 border border-1 rounded-3"
-											id="subject"
-											name="subject"
-											placeholder="Subject"
-											aria-label="subject"
-										/>
-									</div>
-									<div class="col-12">
-										<textarea
-											class="form-control bg-3 border border-1 rounded-3"
-											id="message"
-											name="message"
-											placeholder="Message"
-											aria-label="With textarea"
-										/>
-									</div>
-									<div class="col-12">
-										<button type="submit" class="btn btn-primary-2 rounded-2">
-											Send Message
-											<i class="ri-arrow-right-up-line" />
-										</button>
-									</div>
+					<div class="col-lg-4">
+						<div class="blog-card rounded-top-2 mb-lg-3 mb-md-5 mb-3">
+							<div class="blog-card__image position-relative">
+								<div class="zoom-img rounded-2 overflow-hidden">
+									<img class="w-100" src="/assets/imgs/home-page-2/blog/img-2.png" alt="zelio" />
+									<a
+										class="position-absolute bottom-0 start-0 m-3 text-white-keep border border-white fw-medium px-3 py-1 fs-7 bg-white rounded-2"
+										href="/#">Development</a
+									>
+									<a
+										href="/#"
+										class="blog-card__link position-absolute top-50 start-50 translate-middle icon-md icon-shape rounded-circle"
+									>
+										<i class="ri-arrow-right-up-line" />
+									</a>
 								</div>
-							</form>
-						</div>
-						<div class="z-0 bg-primary-dark rectangle-bg z-1 rounded-3" />
-					</div>
-				</div>
-				<div class="col-lg-5 d-flex flex-column ps-lg-8">
-					<div class="d-flex align-items-center mb-3 position-relative d-inline-flex">
-						<div class="d-inline-block">
-							<div class="icon-flip flex-nowrap icon-shape icon-xxl border border-1 rounded-3 bg-3">
-								<i class="ri-linkedin-fill text-primary-2 fs-26" />
+							</div>
+							<div class="blog-card__content position-relative text-center mt-4">
+								<span class="blog-card__date fs-7">March 28, 2023 • 3 min read</span>
+								<h6 class="blog-card__title mt-2">Best Practices for Secure Web Development</h6>
+								<p class="blog-card__description fs-7">
+									Stay ahead of the curve with these emerging trends in UI/UX design.
+								</p>
+								<a href="/#" class="link-overlay position-absolute top-0 start-0 w-100 h-100"
+									><span class="visually-hidden">Open item</span></a
+								>
 							</div>
 						</div>
-						<div class="ps-3 h-100">
-							<span class="text-400 fs-6">LinkedIn</span>
-							<h6 class="mb-0">/in/yann-paillard</h6>
-						</div>
-						<a
-							href="https://www.linkedin.com/in/yann-paillard/?locale=en_US"
-							target="_blank"
-							rel="noreferrer"
-							class="position-absolute top-0 start-0 w-100 h-100"
-							><span class="visually-hidden">LinkedIn</span></a
-						>
 					</div>
-					<div class="d-flex align-items-center mb-3 position-relative d-inline-flex">
-						<div class="d-inline-block">
-							<div class="icon-flip flex-nowrap icon-shape icon-xxl border border-1 rounded-3 bg-3">
-								<i class="ri-github-fill text-primary-2 fs-26" />
+					<div class="col-lg-4">
+						<div class="blog-card rounded-top-2 mb-lg-3 mb-md-5 mb-3">
+							<div class="blog-card__image position-relative">
+								<div class="zoom-img rounded-2 overflow-hidden">
+									<img class="w-100" src="/assets/imgs/home-page-2/blog/img-3.png" alt="zelio" />
+									<a
+										class="position-absolute bottom-0 start-0 m-3 text-white-keep border border-white fw-medium px-3 py-1 fs-7 bg-white rounded-2"
+										href="/#">Trending</a
+									>
+									<a
+										href="/#"
+										class="blog-card__link position-absolute top-50 start-50 translate-middle icon-md icon-shape rounded-circle"
+									>
+										<i class="ri-arrow-right-up-line" />
+									</a>
+								</div>
 							</div>
-						</div>
-						<div class="ps-3 h-100">
-							<span class="text-400 fs-6">GitHub</span>
-							<h6 class="mb-0">github.com/Payll</h6>
-						</div>
-						<a
-							href="https://github.com/Payll"
-							target="_blank"
-							rel="noreferrer"
-							class="position-absolute top-0 start-0 w-100 h-100"
-							><span class="visually-hidden">GitHub</span></a
-						>
-					</div>
-					<div class="d-flex align-items-center mb-3 position-relative d-inline-flex">
-						<div class="d-inline-block">
-							<div class="icon-flip flex-nowrap icon-shape icon-xxl border border-1 rounded-3 bg-3">
-								<i class="ri-building-4-fill text-primary-2 fs-26" />
+							<div class="blog-card__content position-relative text-center mt-4">
+								<span class="blog-card__date fs-7">March 28, 2023 • 3 min read</span>
+								<h6 class="blog-card__title mt-2">
+									10 JavaScript Frameworks for Web Development in 2024
+								</h6>
+								<p class="blog-card__description fs-7">
+									Stay ahead of the curve with these emerging trends in UI/UX design.
+								</p>
+								<a href="/#" class="link-overlay position-absolute top-0 start-0 w-100 h-100"
+									><span class="visually-hidden">Open item</span></a
+								>
 							</div>
-						</div>
-						<div class="ps-3 h-100">
-							<span class="text-400 fs-6">Workplace</span>
-							<h6 class="mb-0">Wi6labs (France)</h6>
-						</div>
-						<a
-							href="https://www.wi6labs.com/"
-							target="_blank"
-							rel="noreferrer"
-							class="position-absolute top-0 start-0 w-100 h-100"
-							><span class="visually-hidden">Wi6labs</span></a
-						>
-					</div>
-					<div class="d-flex align-items-center mb-3 position-relative d-inline-flex">
-						<div class="d-inline-block">
-							<div class="icon-flip flex-nowrap icon-shape icon-xxl border border-1 rounded-3 bg-3">
-								<i class="ri-map-2-fill text-primary-2 fs-26" />
-							</div>
-						</div>
-						<div class="ps-3 h-100">
-							<span class="text-400 fs-6">Location</span>
-							<h6 class="mb-0">France</h6>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</section>
+		</section>
+	{/if}
+
+	<!-- Contact 1 (hidden for now) -->
+	<div id="contact" class="visually-hidden" aria-hidden="true" />
+	{#if false}
+		<section id="contact" class="section-contact-2 position-relative pb-60 overflow-hidden">
+			<div class="container position-relative z-1">
+				<div class="row align-items-center">
+					<div class="col-lg-7 pb-5 pb-lg-0">
+						<div class="position-relative">
+							<div class="position-relative z-2">
+								<h3 class="text-primary-2 mb-3">Let’s connect</h3>
+								{#if false}
+									<form action="#">
+										<div class="row g-3">
+											<div class="col-md-6">
+												<input
+													type="text"
+													class="form-control bg-3 border border-1 rounded-3"
+													id="name"
+													name="name"
+													placeholder="Your name"
+													aria-label="username"
+												/>
+											</div>
+											<div class="col-md-6">
+												<input
+													type="text"
+													class="form-control bg-3 border border-1 rounded-3"
+													id="phone"
+													name="phone"
+													placeholder="Phone"
+													aria-label="phone"
+												/>
+											</div>
+											<div class="col-md-6">
+												<input
+													type="text"
+													class="form-control bg-3 border border-1 rounded-3"
+													id="email"
+													name="email"
+													placeholder="Emaill"
+													aria-label="email"
+												/>
+											</div>
+											<div class="col-md-6">
+												<input
+													type="text"
+													class="form-control bg-3 border border-1 rounded-3"
+													id="subject"
+													name="subject"
+													placeholder="Subject"
+													aria-label="subject"
+												/>
+											</div>
+											<div class="col-12">
+												<textarea
+													class="form-control bg-3 border border-1 rounded-3"
+													id="message"
+													name="message"
+													placeholder="Message"
+													aria-label="With textarea"
+												/>
+											</div>
+											<div class="col-12">
+												<button type="submit" class="btn btn-primary-2 rounded-2">
+													Send Message
+													<i class="ri-arrow-right-up-line" />
+												</button>
+											</div>
+										</div>
+									</form>
+								{/if}
+							</div>
+							{#if false}
+								<div class="z-0 bg-primary-dark rectangle-bg z-1 rounded-3" />
+							{/if}
+						</div>
+					</div>
+					<div class="col-lg-5 d-flex flex-column ps-lg-8">
+						<div class="d-flex align-items-center mb-3 position-relative d-inline-flex">
+							<div class="d-inline-block">
+								<div
+									class="icon-flip flex-nowrap icon-shape icon-xxl border border-1 rounded-3 bg-3"
+								>
+									<i class="ri-linkedin-fill text-primary-2 fs-26" />
+								</div>
+							</div>
+							<div class="ps-3 h-100">
+								<span class="text-400 fs-6">LinkedIn</span>
+								<h6 class="mb-0">/in/yann-paillard</h6>
+							</div>
+							<a
+								href="https://www.linkedin.com/in/yann-paillard/?locale=en_US"
+								target="_blank"
+								rel="noreferrer"
+								class="position-absolute top-0 start-0 w-100 h-100"
+								><span class="visually-hidden">LinkedIn</span></a
+							>
+						</div>
+						<div class="d-flex align-items-center mb-3 position-relative d-inline-flex">
+							<div class="d-inline-block">
+								<div
+									class="icon-flip flex-nowrap icon-shape icon-xxl border border-1 rounded-3 bg-3"
+								>
+									<i class="ri-github-fill text-primary-2 fs-26" />
+								</div>
+							</div>
+							<div class="ps-3 h-100">
+								<span class="text-400 fs-6">GitHub</span>
+								<h6 class="mb-0">github.com/Payll</h6>
+							</div>
+							<a
+								href="https://github.com/Payll"
+								target="_blank"
+								rel="noreferrer"
+								class="position-absolute top-0 start-0 w-100 h-100"
+								><span class="visually-hidden">GitHub</span></a
+							>
+						</div>
+						<div class="d-flex align-items-center mb-3 position-relative d-inline-flex">
+							<div class="d-inline-block">
+								<div
+									class="icon-flip flex-nowrap icon-shape icon-xxl border border-1 rounded-3 bg-3"
+								>
+									<i class="ri-building-4-fill text-primary-2 fs-26" />
+								</div>
+							</div>
+							<div class="ps-3 h-100">
+								<span class="text-400 fs-6">Workplace</span>
+								<h6 class="mb-0">Wi6labs (France)</h6>
+							</div>
+							<a
+								href="https://www.wi6labs.com/"
+								target="_blank"
+								rel="noreferrer"
+								class="position-absolute top-0 start-0 w-100 h-100"
+								><span class="visually-hidden">Wi6labs</span></a
+							>
+						</div>
+						<div class="d-flex align-items-center mb-3 position-relative d-inline-flex">
+							<div class="d-inline-block">
+								<div
+									class="icon-flip flex-nowrap icon-shape icon-xxl border border-1 rounded-3 bg-3"
+								>
+									<i class="ri-map-2-fill text-primary-2 fs-26" />
+								</div>
+							</div>
+							<div class="ps-3 h-100">
+								<span class="text-400 fs-6">Location</span>
+								<h6 class="mb-0">France</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	{/if}
 </main>
 <!-- prettier-ignore -->
 <!-- Footer -->

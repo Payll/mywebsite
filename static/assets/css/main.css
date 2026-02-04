@@ -14543,8 +14543,181 @@ strong {
 	transition: all 0.3s ease;
 }
 
+.section-service-2 .services-intro {
+	padding: 10px 6px 0 6px;
+}
+
+.section-service-2 .services-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.section-service-2 .services-chip {
+	display: inline-flex;
+	align-items: center;
+	padding: 6px 10px;
+	border-radius: 999px;
+	border: 1px solid var(--tc-border-1);
+	background: var(--tc-bg-3);
+	color: var(--tc-neutral-300);
+	font-size: 12px;
+	letter-spacing: 0.02em;
+	user-select: none;
+	transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.section-service-2 .services-chip:hover {
+	transform: translateY(-1px);
+	border-color: var(--tc-theme-primary-2);
+}
+
+.section-service-2 .services-terminal {
+	position: relative;
+	border-radius: 14px;
+	border: 1px solid transparent;
+	background: linear-gradient(var(--tc-bg-3), var(--tc-bg-3)) padding-box,
+		linear-gradient(135deg, rgba(168, 255, 83, 0.9), rgba(143, 143, 146, 0.25)) border-box;
+	overflow: hidden;
+}
+
+.section-service-2 .services-terminal::before {
+	content: '';
+	position: absolute;
+	inset: -40% -60%;
+	background: radial-gradient(circle at 30% 40%, rgba(168, 255, 83, 0.18), transparent 55%);
+	transform: rotate(12deg);
+	pointer-events: none;
+}
+
+.section-service-2 .services-terminal__header {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 12px;
+	border-bottom: 1px solid var(--tc-border-1);
+	background: rgba(31, 31, 36, 0.03);
+}
+
+.section-service-2 .services-terminal__dots {
+	display: inline-flex;
+	gap: 6px;
+}
+
+.section-service-2 .services-terminal__dots span {
+	width: 10px;
+	height: 10px;
+	border-radius: 999px;
+	background: rgba(143, 143, 146, 0.6);
+}
+
+.section-service-2 .services-terminal__dots span:nth-child(1) {
+	background: rgba(255, 95, 86, 0.9);
+}
+
+.section-service-2 .services-terminal__dots span:nth-child(2) {
+	background: rgba(255, 189, 46, 0.9);
+}
+
+.section-service-2 .services-terminal__dots span:nth-child(3) {
+	background: rgba(39, 201, 63, 0.9);
+}
+
+.section-service-2 .services-terminal__title {
+	font-size: 12px;
+	color: var(--tc-neutral-300);
+	letter-spacing: 0.02em;
+}
+
+.section-service-2 .services-terminal__body {
+	margin: 0;
+	padding: 12px 14px 14px 14px;
+	font-family: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+		'Courier New', monospace;
+	font-size: 12.5px;
+	line-height: 1.6;
+	color: var(--tc-neutral-0);
+}
+
+.section-service-2 .services-terminal__body code {
+	color: inherit;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.section-service-2 .services-terminal__body code {
+		background: linear-gradient(
+			90deg,
+			rgba(168, 255, 83, 0),
+			rgba(168, 255, 83, 0.12),
+			rgba(168, 255, 83, 0)
+		);
+		background-size: 200% 100%;
+		animation: services-scan 4.2s linear infinite;
+	}
+}
+
+@keyframes services-scan {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
+}
+
 .section-experience .technology:hover {
 	background-color: var(--tc-border-1) !important;
+}
+
+.section-experience .technology.is-active {
+	background-color: var(--tc-border-1) !important;
+	border-color: var(--tc-theme-primary-2) !important;
+}
+
+.section-experience .technology.is-active h5 {
+	color: var(--tc-theme-primary-2) !important;
+}
+
+.section-experience .experience-typed {
+	font-family: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+		'Courier New', monospace;
+}
+
+.section-experience .experience-type-cursor {
+	display: inline-block;
+	width: 0.6em;
+	height: 1em;
+	background: var(--tc-theme-primary-2);
+	margin-left: 2px;
+	vertical-align: -0.2em;
+	animation: experience-type-blink 0.8s steps(1) infinite;
+}
+
+@keyframes experience-type-blink {
+	50% {
+		opacity: 0;
+	}
+}
+
+.section-experience .experience-list-scroll {
+	max-height: min(420px, 60vh);
+	overflow-y: auto;
+	padding-right: 6px;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(143, 143, 146, 0.55) transparent;
+}
+
+.section-experience .experience-list-scroll::-webkit-scrollbar {
+	width: 6px;
+}
+
+.section-experience .experience-list-scroll::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.section-experience .experience-list-scroll::-webkit-scrollbar-thumb {
+	background: rgba(143, 143, 146, 0.55);
+	border-radius: 999px;
 }
 
 .section-projects-2 .link-hover {
