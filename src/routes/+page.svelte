@@ -755,10 +755,14 @@ $ deliverable: maintainable systems`
 										<i class="ri-computer-line text-primary-2" />
 										<h2 class="text-300 my-0 fs-50">
 											<span class="fs-50 text-300 mb-0">+</span>
-											<span class="odometer text-dark fw-medium" data-count="2200">2200</span>
+											<span class="odometer text-dark fw-medium" data-count="4500">4500</span>
 										</h2>
 										<p class="fs-6 mb-0 text-dark">
-											{$locale === 'fr' ? 'Utilisateurs mensuels' : 'Monthly active users'}
+											{#if $locale === 'fr'}
+												Utilisateurs au total<br />sur l'ensemble des projets
+											{:else}
+												Total users across<br />all contributed projects
+											{/if}
 										</p>
 									</div>
 								</div>
@@ -1524,20 +1528,6 @@ $ deliverable: maintainable systems`
 									</div>
 								</div>
 							</div>
-							<div class="text-center pt-60">
-								<p class="text-300">
-									{#if $locale === 'fr'}
-										Partant pour de <span class="text-dark">nouveaux projets</span> et
-										collaborations.
-										<br />
-										Discutons de vos idees.
-									{:else}
-										Excited to take on <span class="text-dark">new projects</span> and collaborate.
-										<br />
-										Let's chat about your ideas.
-									{/if}
-								</p>
-							</div>
 						</div>
 					</div>
 					<img
@@ -2072,7 +2062,9 @@ $ deliverable: maintainable systems`
 								>
 									<circle cx="2.5" cy="3" r="2.5" fill="#A8FF53" />
 								</svg>
-								<span class="text-linear-4 d-flex align-items-center"> Projects </span>
+								<span class="text-linear-4 d-flex align-items-center"
+									>{$locale === 'fr' ? 'Compétences' : 'Skills'}</span
+								>
 							</div>
 							<h3>{$locale === 'fr' ? 'Mes compétences' : 'My Skills'}</h3>
 						</div>

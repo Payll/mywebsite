@@ -475,11 +475,53 @@ img {
 	}
 }
 .box-linear-animation {
+	--line-rotate-duration: 8s;
+	--line-rotate-delay: 0s;
+	--line-rotate-direction: normal;
 	border-radius: 8px;
 	border: 1px solid rgba(0, 0, 0, 0);
 	background: linear-gradient(var(--tc-bg-3), var(--tc-bg-3)) padding-box,
 		linear-gradient(var(--angle), var(--tc-bg-3) 90%, var(--tc-theme-primary-2) 100%) border-box;
-	animation: 8s rotate linear infinite;
+	animation: rotate var(--line-rotate-duration) linear infinite;
+	animation-delay: var(--line-rotate-delay);
+	animation-direction: var(--line-rotate-direction);
+}
+
+.section-hero-2 .box-linear-animation {
+	--line-rotate-duration: 8.6s;
+	--line-rotate-delay: -1.2s;
+}
+
+.section-static-1 .box-linear-animation {
+	--line-rotate-duration: 10.2s;
+	--line-rotate-delay: -5.4s;
+	--line-rotate-direction: reverse;
+}
+
+.section-service-2 .box-linear-animation {
+	--line-rotate-duration: 7.4s;
+	--line-rotate-delay: -2.7s;
+}
+
+.section-experience .box-linear-animation {
+	--line-rotate-duration: 9.8s;
+	--line-rotate-delay: -4.1s;
+}
+
+.section-education .col-lg-6:first-child .box-linear-animation {
+	--line-rotate-duration: 8.1s;
+	--line-rotate-delay: -0.9s;
+}
+
+.section-education .col-lg-6:last-child .box-linear-animation {
+	--line-rotate-duration: 11.3s;
+	--line-rotate-delay: -6.2s;
+	--line-rotate-direction: reverse;
+}
+
+.section-skills-2 .box-linear-animation {
+	--line-rotate-duration: 7.9s;
+	--line-rotate-delay: -3.6s;
 }
 
 @keyframes rotate {
