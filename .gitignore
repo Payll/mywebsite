@@ -12,3 +12,4 @@ example
 logs
 .sisyphus
 infos
+package-lock.json

@@ -2,68 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-
-body,html{
-  background: rgb(11,8,0);
-  background: linear-gradient(340deg, rgba(11,8,0,1) 0%, rgba(26,28,32,1) 53%, rgba(49,56,65,1) 100%);
-  scroll-behavior: smooth;
+body,
+html {
+	background: rgb(11, 8, 0);
+	background: linear-gradient(
+		340deg,
+		rgba(11, 8, 0, 1) 0%,
+		rgba(26, 28, 32, 1) 53%,
+		rgba(49, 56, 65, 1) 100%
+	);
+	scroll-behavior: smooth;
 }
 
-.frenchFlag:hover{
-    background: linear-gradient(90deg , #0015ff, #ffffff, #ff0101);
-    -webkit-background-clip: text;
-    color: transparent;
-    display: inline;
-    -webkit-text-fill-color: transparent;
+.frenchFlag:hover {
+	background: linear-gradient(90deg, #0015ff, #ffffff, #ff0101);
+	-webkit-background-clip: text;
+	color: transparent;
+	display: inline;
+	-webkit-text-fill-color: transparent;
 }
 
-
-.shadowRight{
-    box-shadow: 5px 0px 5px rgba(0, 0, 0, 0.5);
+.shadowRight {
+	box-shadow: 5px 0px 5px rgba(0, 0, 0, 0.5);
 }
 
-.shadowLeft{
-  box-shadow: -5px 0px 5px rgba(0, 0, 0, 0.5);
+.shadowLeft {
+	box-shadow: -5px 0px 5px rgba(0, 0, 0, 0.5);
 }
 
-.shadowEvrywhere{
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+.shadowEvrywhere {
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
 }
-.shadowEvrywhereWhite{
-  box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.5);
-}
-
-.whiteGradient{
-  background: rgb(136,147,163);
-  background: linear-gradient(340deg, rgba(136,147,163,1) 0%, rgba(253,251,255,1) 100%);
+.shadowEvrywhereWhite {
+	box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.5);
 }
 
-
-.blackGradient{
-  background: rgb(31,34,40);
-  background: linear-gradient(340deg,rgba(11,8,0,1) 0%,rgba(31,34,40,1) 100%);
+.whiteGradient {
+	background: rgb(136, 147, 163);
+	background: linear-gradient(340deg, rgba(136, 147, 163, 1) 0%, rgba(253, 251, 255, 1) 100%);
 }
 
-.screenSizeWithoutNavbar{
-  height: calc(100vh - 80px);
+.blackGradient {
+	background: rgb(31, 34, 40);
+	background: linear-gradient(340deg, rgba(11, 8, 0, 1) 0%, rgba(31, 34, 40, 1) 100%);
 }
 
-.firstTileSize{
-  height: calc(100vh - 50vh);
+.screenSizeWithoutNavbar {
+	height: calc(100vh - 80px);
 }
 
-.secondTileSize{
-  height: calc(100vh - 55vh);
+.firstTileSize {
+	height: calc(100vh - 50vh);
 }
 
-.blackColorButton{
-  background-color: #1d232a;
+.secondTileSize {
+	height: calc(100vh - 55vh);
 }
 
-.blackColorButton:hover{
-  background-color: #374250;
+.blackColorButton {
+	background-color: #1d232a;
 }
 
-.scrollingTimeTilesSize{
-  height: calc(100vh - 30vh);
+.blackColorButton:hover {
+	background-color: #374250;
+}
+
+.scrollingTimeTilesSize {
+	height: calc(100vh - 30vh);
 }
