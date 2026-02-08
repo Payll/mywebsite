@@ -464,11 +464,6 @@ $ deliverable: maintainable systems`
 								<i class="ri-github-fill fs-18" />
 							</a>
 						</div>
-						<div class="burger-icon burger-icon-white border rounded-3">
-							<span class="burger-icon-top" />
-							<span class="burger-icon-mid" />
-							<span class="burger-icon-bottom" />
-						</div>
 					</div>
 				</div>
 				<div
@@ -495,6 +490,11 @@ $ deliverable: maintainable systems`
 					<div class="dark-light-switcher d-flex justify-content-center align-items-center icon_80">
 						<i class="ri-sun-fill text-warning" />
 						<i class="ri-contrast-2-line text-white" />
+					</div>
+					<div class="burger-icon burger-icon-white border rounded-3 d-lg-none">
+						<span class="burger-icon-top" />
+						<span class="burger-icon-mid" />
+						<span class="burger-icon-bottom" />
 					</div>
 				</div>
 			</nav>
@@ -627,7 +627,11 @@ $ deliverable: maintainable systems`
 									<div class="text-dark">
 										<div class="typewriter">
 											<h1 class="fs-6 fw-medium">
-												{$locale === 'fr' ? 'Salut, je suis Yann' : "Hey, I'm Yann"}
+												{#if $locale === 'fr'}
+													Salut, je suis<br class="d-sm-none" /> Yann
+												{:else}
+													Hey, I'm<br class="d-sm-none" /> Yann
+												{/if}
 											</h1>
 										</div>
 									</div>
@@ -2581,3 +2585,153 @@ $ deliverable: maintainable systems`
 <!-- Libs JS -->
 
 <!-- Theme JS -->
+
+<style>
+	:global(header .navbar-home-2 > .container.py-3.px-4) {
+		width: auto;
+		max-width: none;
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	:global(header .navbar-home-2 > .d-flex.align-items-center.gap-3) {
+		flex: 0 0 auto;
+	}
+
+	:global(header .navbar-home-2 .navbar-nav) {
+		flex-wrap: nowrap;
+	}
+
+	:global(header .navbar-home-2 .navbar-nav .nav-link) {
+		white-space: nowrap;
+	}
+
+	@media (max-width: 1399.98px) {
+		:global(header .navbar-home-2 .navbar-menu) {
+			display: none !important;
+		}
+
+		:global(header .navbar-home-2 .navbar-nav .nav-link) {
+			padding: 0.5rem 0.65rem;
+		}
+	}
+
+	@media (max-width: 991.98px) {
+		:global(header .navbar-home-2 .navbar-menu) {
+			display: none !important;
+		}
+
+		:global(header .navbar-home-2 .container.py-3.px-4) {
+			padding: 0.5rem 0.75rem !important;
+		}
+
+		:global(header .navbar-home-2 .main-logo) {
+			margin-right: 0;
+			display: inline-flex;
+			align-items: center;
+			flex: 0 0 auto;
+		}
+
+		:global(header .navbar-home-2 .main-logo img) {
+			display: block;
+			object-fit: contain;
+		}
+
+		:global(header .navbar-home-2 .navbar-social) {
+			padding-right: 0 !important;
+			margin-right: 0 !important;
+		}
+
+		:global(header .navbar-home-2 > .d-flex.align-items-center.gap-3 .burger-icon) {
+			position: relative !important;
+			top: auto !important;
+			right: auto !important;
+			bottom: auto !important;
+			left: auto !important;
+			display: inline-flex !important;
+			align-items: center;
+			justify-content: center;
+			margin-left: 0;
+			flex: 0 0 auto;
+			z-index: 1;
+		}
+
+		:global(header .navbar-home-2 .burger-icon),
+		:global(header .navbar-home-2 .icon_80) {
+			width: 40px;
+			height: 40px;
+			min-width: 40px;
+		}
+
+		:global(header .navbar-home-2 > .d-flex.align-items-center.gap-3) {
+			gap: 0.5rem !important;
+			padding-right: 0.75rem !important;
+			padding-left: 0 !important;
+		}
+
+		:global(header .navbar-home-2 .main-logo .fs-4) {
+			font-size: 1.05rem !important;
+		}
+	}
+
+	@media (max-width: 575.98px) {
+		:global(header .navbar-home-2 .container.py-3.px-4) {
+			padding: 0.35rem 0.5rem !important;
+		}
+
+		:global(header .navbar-home-2 .main-logo .fs-4) {
+			display: none;
+		}
+
+		:global(header .navbar-home-2 .main-logo img) {
+			width: 24px;
+			height: 24px;
+		}
+
+		:global(header .navbar-home-2 .navbar-social) {
+			padding-right: 0 !important;
+			margin-right: 0 !important;
+		}
+
+		:global(header .navbar-home-2 .burger-icon),
+		:global(header .navbar-home-2 .icon_80) {
+			width: 36px;
+			height: 36px;
+			min-width: 36px;
+		}
+
+		:global(header .navbar-home-2 > .d-flex.align-items-center.gap-3 .burger-icon) {
+			position: relative !important;
+			top: auto !important;
+			right: auto !important;
+			bottom: auto !important;
+			left: auto !important;
+			display: inline-flex !important;
+			align-items: center;
+			justify-content: center;
+			margin-left: 0;
+			flex: 0 0 auto;
+			z-index: 1;
+		}
+
+		:global(header .navbar-home-2 > .d-flex.align-items-center.gap-3) {
+			gap: 0.35rem !important;
+			padding-right: 0.4rem !important;
+			padding-left: 0.4rem !important;
+		}
+
+		:global(header .navbar-home-2 .lang-switcher button) {
+			font-size: 0.75rem;
+			line-height: 1;
+			padding: 0.2rem 0.4rem;
+		}
+
+		:global(.section-hero-2 .typewriter h1) {
+			white-space: normal;
+			overflow-wrap: normal;
+			letter-spacing: 0.03em;
+			border-right: 0;
+			animation: none;
+		}
+	}
+</style>
